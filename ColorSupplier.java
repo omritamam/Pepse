@@ -3,7 +3,6 @@ package pepse.util;
 import java.awt.*;
 import java.util.Random;
 
-
 /**
  * Provides procedurally-generated colors around a pivot.
  * @author Dan Nirel
