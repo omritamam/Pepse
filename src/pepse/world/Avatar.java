@@ -1,14 +1,15 @@
 package pepse.world;
 
-import com.sun.org.apache.bcel.internal.generic.RETURN;
 import danogl.GameObject;
+import danogl.collisions.GameObjectCollection;
+import danogl.gui.ImageReader;
+import danogl.gui.UserInputListener;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class Avatar extends GameObject {
-
-
+    private static final String IMAGE_PATH = "";
+    public static Vector2 DIEMNSIONS = new Vector2(100,100);
     /**
      * Construct a new GameObject instance.
      *
@@ -21,11 +22,11 @@ public class Avatar extends GameObject {
         super(topLeftCorner, dimensions, renderable);
     }
 
-    static Avatar create(danogl.collisions.GameObjectCollection gameObjects,
+    static Avatar create(GameObjectCollection gameObjects,
                          int layer,
-                         danogl.util.Vector2 topLeftCorner,
-                         danogl.gui.UserInputListener inputListener,
-                         danogl.gui.ImageReader imageReader){
-    throw new NotImplementedException();
+                         Vector2 topLeftCorner,
+                         UserInputListener inputListener,
+                         ImageReader imageReader){
+        return new Avatar(topLeftCorner,DIEMNSIONS,imageReader.readImage(IMAGE_PATH,true));
     }
 }
