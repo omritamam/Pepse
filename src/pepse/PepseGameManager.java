@@ -10,10 +10,13 @@ import danogl.gui.WindowController;
 import danogl.util.Vector2;
 import pepse.world.Sky;
 import pepse.world.daynight.Night;
+import pepse.world.daynight.Sun;
 
 public class PepseGameManager extends GameManager {
-    private static final int FRAME_RATE = 80;
+    private static final int FRAME_RATE = 60;
     public static int SKY_LAYER = -200;
+    public static int DAYNIGHT_CYCLE = 30;
+
     public static void main(String[] args) {
         new PepseGameManager().run();
     }
@@ -29,6 +32,7 @@ public class PepseGameManager extends GameManager {
 //        terrain.createInRange(cameraDimensions, cameraDimensions + (int) windowDimensions.x());
         // TODO why these numbers?
         terrain.createInRange(0, 1500);
-        Night.create(gameObjects(),Layer.FOREGROUND,windowDimensions,30);
+        Night.create(gameObjects(),Layer.FOREGROUND,windowDimensions,DAYNIGHT_CYCLE);
+        Sun.create(gameObjects(), Layer.BACKGROUND + 1, windowDimensions, DAYNIGHT_CYCLE);
     }
 }
