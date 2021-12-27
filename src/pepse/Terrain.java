@@ -15,12 +15,16 @@ public class Terrain {
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
     private static final int TERRAIN_DEPTH = 20;
     private static final float CROOKEDNESS_FACTOR = 3.0F;
+    private static final String TAG = "ground";
+
     private final GameObjectCollection gameObjects;
     private final int groundLayer;
     private final Vector2 windowDimensions;
     private final int seed;
-    public float groundHeightAtX0;
-    private NoiseGenerator noiseGenerator;
+    private final RectangleRenderable renderable;
+    public final float groundHeightAtX0;
+    private final NoiseGenerator noiseGenerator;
+
     public Terrain(GameObjectCollection gameObjects,
                    int groundLayer, Vector2 windowDimensions,
                    int seed) {
@@ -29,7 +33,8 @@ public class Terrain {
         this.windowDimensions = windowDimensions;
         this.seed = seed;
         groundHeightAtX0 =  2 * windowDimensions.y()/3;
-        noiseGenerator = new NoiseGenerator(seed);
+        noiseGenerator = new NoiseGenerator();
+        this.renderable = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
 
     }
     public float groundHeightAt(float x) {
@@ -46,8 +51,10 @@ public class Terrain {
     private void createColumn(float x) {
         float minY = (float) (Math.floor(groundHeightAt(x) / Block.SIZE) * Block.SIZE);
         float maxY = windowDimensions.y();
+        // TODO what abput TERRAIN_DEPTH?
         for(float curY = minY; curY < maxY; curY+=Block.SIZE){
-            GameObject block = new Block(new Vector2(x,curY),new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR)));
+            GameObject block = new Block(new Vector2(x,curY),this.renderable);
+            block.setTag(TAG);
             gameObjects.addGameObject(block, groundLayer);
         }
     }
