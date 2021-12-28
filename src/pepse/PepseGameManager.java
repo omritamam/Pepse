@@ -13,6 +13,7 @@ import pepse.world.Sky;
 import pepse.world.daynight.Night;
 import pepse.world.daynight.Sun;
 import pepse.world.daynight.SunHalo;
+import pepse.world.trees.Tree;
 
 import java.awt.*;
 
@@ -42,5 +43,6 @@ public class PepseGameManager extends GameManager {
                 DAYNIGHT_CYCLE);
         GameObject sunHalo = SunHalo.create(gameObjects(), Layer.BACKGROUND + 2, sun, HALO_COLOR);
         sunHalo.addComponent((d)->sunHalo.setCenter(sun.getCenter()));
+        Tree treeManager = new Tree(terrain::groundHeightAt);
     }
 }

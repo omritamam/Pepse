@@ -37,10 +37,12 @@ public class Terrain {
         this.renderable = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
 
     }
+
     public float groundHeightAt(float x) {
         return (float) (noiseGenerator.noise(x)*Block.SIZE*CROOKEDNESS_FACTOR+groundHeightAtX0);
 
     }
+
     public void createInRange(int minX, int maxX) {
         minX = (int) (Math.floor(minX / Block.SIZE) * Block.SIZE);
         for(int curX  = minX; curX<maxX; curX +=Block.SIZE){
