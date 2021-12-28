@@ -21,7 +21,6 @@ public class Terrain {
     private final int groundLayer;
     private final Vector2 windowDimensions;
     private final int seed;
-    private final RectangleRenderable renderable;
     public final float groundHeightAtX0;
     private final NoiseGenerator noiseGenerator;
 
@@ -34,8 +33,6 @@ public class Terrain {
         this.seed = seed;
         this.groundHeightAtX0 =  2 * windowDimensions.y()/3;
         this.noiseGenerator = new NoiseGenerator(this.seed);
-        this.renderable = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
-
     }
 
     public float groundHeightAt(float x) {
@@ -55,7 +52,8 @@ public class Terrain {
         float maxY = windowDimensions.y();
         // TODO what abput TERRAIN_DEPTH?
         for(float curY = minY; curY < maxY; curY+=Block.SIZE){
-            GameObject block = new Block(new Vector2(x,curY),this.renderable);
+            GameObject block = new Block(new Vector2(x,curY)
+                    ,new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR)));
             block.setTag(TAG);
             gameObjects.addGameObject(block, groundLayer);
         }

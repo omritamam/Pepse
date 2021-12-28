@@ -19,9 +19,8 @@ public class Tree {
     private static final double EXTRA_BLOCK_CHANCE = 0.1;
     private static final int BASE_TRUNK = 10;
     private static final String TAG = "trunk";
-    private static final int LEAF_SLOTS = 100;
+    private static final int LEAF_SLOTS = 9;
 
-    private final RectangleRenderable renderable;
     private final GameObjectCollection gameObjects;
     private final int layer;
     private final int seed;
@@ -32,7 +31,6 @@ public class Tree {
         this.gameObjects = gameObjects;
         this.layer = layer;
         this.groundHeightAt = groundHeightAt;
-        this.renderable = new RectangleRenderable(ColorSupplier.approximateColor(TRUNK_COLOR));
         this.seed = seed;
     }
 
@@ -60,14 +58,16 @@ public class Tree {
     }
 
     private void addTrunkBlock(float x, float y){
-        GameObject block = new Block(new Vector2(x, y), this.renderable);
+        GameObject block = new Block(new Vector2(x, y),
+                new RectangleRenderable(ColorSupplier.approximateColor(TRUNK_COLOR)));
         block.setTag(TAG);
         this.gameObjects.addGameObject(block, this.layer);
     }
 
     private void addLeaves(Vector2 treeTop) {
-        BiPredicate<Integer, Integer> leavesDensity = (i, j)->
-                ((Math.abs(LEAF_SLOTS - i) < LEAF_SLOTS / 2) && (Math.abs(LEAF_SLOTS - j) < LEAF_SLOTS / 2));   // TODO set density
+//        BiPredicate<Integer, Integer> leavesDensity = (i, j)->
+//                ((Math.abs(LEAF_SLOTS - i) < LEAF_SLOTS / 2) && (Math.abs(LEAF_SLOTS - j) < LEAF_SLOTS / 2));   // TODO set density
+        BiPredicate<Integer, Integer> leavesDensity = (i, j)->(true);
         Leaves leaves = new Leaves(this.gameObjects, treeTop, this.layer + 1, LEAF_SLOTS, leavesDensity);
         leaves.createLeaves();
     }
