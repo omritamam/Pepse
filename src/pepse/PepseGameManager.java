@@ -16,6 +16,7 @@ import pepse.world.daynight.SunHalo;
 import pepse.world.trees.Tree;
 
 import java.awt.*;
+import java.util.Random;
 
 public class PepseGameManager extends GameManager {
     private static final int FRAME_RATE = 60;
@@ -23,6 +24,8 @@ public class PepseGameManager extends GameManager {
     private static final int TREE_LAYER = Layer.BACKGROUND + 10;
     private static final int DAYNIGHT_CYCLE = 30;
     private static final Color HALO_COLOR = new Color(255, 255, 0, 20);
+
+    private double seed;
 
     public static void main(String[] args) {
         new PepseGameManager().run();
@@ -33,19 +36,25 @@ public class PepseGameManager extends GameManager {
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
         Vector2 windowDimensions = windowController.getWindowDimensions();
         windowController.setTargetFramerate(FRAME_RATE);
+        // create sky
         Sky.create(gameObjects(),windowDimensions, SKY_LAYER);
-        Terrain terrain = new Terrain(gameObjects(), Layer.STATIC_OBJECTS,windowDimensions,0);
+        // create terrain
+        this.seed = new Random().nextGaussian() * 255;
+        // TODO check seed
+        Terrain terrain = new Terrain(gameObjects(), Layer.STATIC_OBJECTS,windowDimensions,(int) seed);
 //        int cameraDimensions = (int) super.camera().getDimensions().x();
 //        terrain.createInRange(cameraDimensions, cameraDimensions + (int) windowDimensions.x());
-        // TODO why these numbers?
+        // TODO check range numbers
         terrain.createInRange(0, 1500);
+        // create day-night cycle
         Night.create(gameObjects(),Layer.FOREGROUND,windowDimensions,DAYNIGHT_CYCLE);
         GameObject sun = Sun.create(gameObjects(), Layer.BACKGROUND + 1, windowDimensions,
                 DAYNIGHT_CYCLE);
         GameObject sunHalo = SunHalo.create(gameObjects(), Layer.BACKGROUND + 2, sun, HALO_COLOR);
         sunHalo.addComponent((d)->sunHalo.setCenter(sun.getCenter()));
-        Tree treeManager = new Tree(gameObjects(), TREE_LAYER, terrain::groundHeightAt);
-        // TODO why these numbers?
+        // create trees
+        Tree treeManager = new Tree(gameObjects(), TREE_LAYER, terrain::groundHeightAt, (int) this.seed);
+        // TODO check range numbers
         treeManager.createInRange(0, 1500);
     }
 }

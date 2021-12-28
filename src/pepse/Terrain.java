@@ -32,8 +32,8 @@ public class Terrain {
         this.groundLayer = groundLayer;
         this.windowDimensions = windowDimensions;
         this.seed = seed;
-        groundHeightAtX0 =  2 * windowDimensions.y()/3;
-        noiseGenerator = new NoiseGenerator();
+        this.groundHeightAtX0 =  2 * windowDimensions.y()/3;
+        this.noiseGenerator = new NoiseGenerator(this.seed);
         this.renderable = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
 
     }

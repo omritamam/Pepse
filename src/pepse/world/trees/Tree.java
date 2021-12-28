@@ -8,6 +8,8 @@ import pepse.util.ColorSupplier;
 import pepse.world.Block;
 
 import java.awt.*;
+import java.util.Objects;
+import java.util.Random;
 import java.util.function.Function;
 
 public class Tree {
@@ -20,14 +22,16 @@ public class Tree {
     private final RectangleRenderable renderable;
     private final GameObjectCollection gameObjects;
     private final int layer;
+    private final int seed;
 
     private Function<Float, Float> groundHeightAt;
 
-    public Tree(GameObjectCollection gameObjects, int layer, Function<Float, Float> groundHeightAt) {
+    public Tree(GameObjectCollection gameObjects, int layer, Function<Float, Float> groundHeightAt, int seed) {
         this.gameObjects = gameObjects;
         this.layer = layer;
         this.groundHeightAt = groundHeightAt;
         this.renderable = new RectangleRenderable(ColorSupplier.approximateColor(TRUNK_COLOR));
+        this.seed = seed;
     }
 
     public void createInRange(int minX, int maxX){
@@ -45,11 +49,10 @@ public class Tree {
             addTrunkBlock(x, y - i * Block.SIZE);
         }
         int ind = BASE_TRUNK;
-        double randFactor = Math.random();
-        while (randFactor < EXTRA_BLOCK_CHANCE){
+        Random randFactor = new Random(Objects.hash(60, this.seed));
+        while (randFactor.nextDouble() < EXTRA_BLOCK_CHANCE){
             addTrunkBlock(x, y - ind * Block.SIZE);
             ind++;
-            randFactor = Math.random();
         }
         addLeaves(ind);
     }
