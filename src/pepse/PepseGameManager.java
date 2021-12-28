@@ -20,6 +20,7 @@ import java.awt.*;
 public class PepseGameManager extends GameManager {
     private static final int FRAME_RATE = 60;
     private static final int SKY_LAYER = -200;
+    private static final int TREE_LAYER = Layer.BACKGROUND + 10;
     private static final int DAYNIGHT_CYCLE = 30;
     private static final Color HALO_COLOR = new Color(255, 255, 0, 20);
 
@@ -43,6 +44,8 @@ public class PepseGameManager extends GameManager {
                 DAYNIGHT_CYCLE);
         GameObject sunHalo = SunHalo.create(gameObjects(), Layer.BACKGROUND + 2, sun, HALO_COLOR);
         sunHalo.addComponent((d)->sunHalo.setCenter(sun.getCenter()));
-        Tree treeManager = new Tree(terrain::groundHeightAt);
+        Tree treeManager = new Tree(gameObjects(), TREE_LAYER, terrain::groundHeightAt);
+        // TODO why these numbers?
+        treeManager.createInRange(0, 1500);
     }
 }
