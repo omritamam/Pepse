@@ -10,15 +10,17 @@ import pepse.world.Block;
 import java.awt.*;
 import java.util.Objects;
 import java.util.Random;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 
 public class Tree {
     private static final Color TRUNK_COLOR = new Color(100, 50, 20);
-    private static final Color LEAF_COLOR = new Color(50, 200, 30);
     private static final double TREE_CHANCE = 0.1;
     private static final double EXTRA_BLOCK_CHANCE = 0.1;
     private static final int BASE_TRUNK = 10;
-    private static final String TRUNK_TAG = "trunk";
+    private static final String TAG = "trunk";
+    private static final int LEAF_SLOTS = 100;
+
     private final RectangleRenderable renderable;
     private final GameObjectCollection gameObjects;
     private final int layer;
@@ -54,16 +56,19 @@ public class Tree {
             addTrunkBlock(x, y - ind * Block.SIZE);
             ind++;
         }
-        addLeaves(ind);
+        addLeaves(new Vector2(x, y - ind * Block.SIZE));
     }
 
     private void addTrunkBlock(float x, float y){
         GameObject block = new Block(new Vector2(x, y), this.renderable);
-        block.setTag(TRUNK_TAG);
+        block.setTag(TAG);
         this.gameObjects.addGameObject(block, this.layer);
     }
 
-    private void addLeaves(int ind) {
-        // TODO
+    private void addLeaves(Vector2 treeTop) {
+        BiPredicate<Integer, Integer> leavesDensity = (i, j)->
+                ((Math.abs(LEAF_SLOTS - i) < LEAF_SLOTS / 2) && (Math.abs(LEAF_SLOTS - j) < LEAF_SLOTS / 2));   // TODO set density
+        Leaves leaves = new Leaves(this.gameObjects, treeTop, this.layer + 1, LEAF_SLOTS, leavesDensity);
+        leaves.createLeaves();
     }
 }
