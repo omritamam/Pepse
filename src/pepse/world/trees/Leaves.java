@@ -10,6 +10,7 @@ import pepse.util.ColorSupplier;
 import pepse.world.Block;
 
 import java.awt.*;
+import java.util.Random;
 import java.util.function.BiPredicate;
 
 public class Leaves {
@@ -20,6 +21,12 @@ public class Leaves {
     private static final Float TURNCYCLE_LENGTH = 5f;
     private static final Vector2 STILL_DIM = new Vector2(25, 45);
     private static final Vector2 TURNED_DIM = new Vector2(30, 30);
+    private static final int FADEOUT_TIME = 20;
+    private static final int HORIZONTAL_TIME = 5;
+    private static final float LEFT_HORIZONTAL = -10;
+    private static final float RIGHT_HORIZONTAL = 10;
+    private static final float LEAF_DROP_RATE = 20;
+    private static final int UPPER_LIFETIME_BOUND = 30;
 
     private final float baseLocX;
     private final float baseLocY;
@@ -55,18 +62,45 @@ public class Leaves {
                 new RectangleRenderable(ColorSupplier.approximateColor(LEAF_COLOR)));
         leaf.setTag(TAG);
         this.gameObjects.addGameObject(leaf, this.layer);
-        float randFactor = (float) Math.random();
+
+        // turn leaves
+        float turnTime = (float) Math.random();
         // TODO change random to depend on seed
-        ScheduledTask delay = new ScheduledTask(leaf, randFactor,false, ()->{
+        Runnable turn = ()->{
             Transition<Float> angleTransition = new Transition<>(leaf, leaf.renderer()::setRenderableAngle,
                     STILL_ANGLE, TURNED_ANGLE, Transition.CUBIC_INTERPOLATOR_FLOAT,
-                    TURNCYCLE_LENGTH + randFactor,
+                    TURNCYCLE_LENGTH + turnTime,
                     Transition.TransitionType.TRANSITION_BACK_AND_FORTH, null);
             Transition<Vector2> widthTransition = new Transition<>(leaf, leaf::setDimensions,
                     STILL_DIM, TURNED_DIM, Transition.CUBIC_INTERPOLATOR_VECTOR,
-                    (TURNCYCLE_LENGTH + randFactor) / 2,
+                    (TURNCYCLE_LENGTH + turnTime) / 2,
                     Transition.TransitionType.TRANSITION_BACK_AND_FORTH, null);
-        });
+        };
+        ScheduledTask turnDelay = new ScheduledTask(leaf, turnTime,false, turn);
+
+        // fade
+        Runnable fade = ()->{
+            // respawn
+            Runnable respawn = ()->{createLeaf(i, j);};
+            leaf.renderer().fadeOut(FADEOUT_TIME, ()->{
+                float respawnTime = (float) Math.random();
+                // TODO change random to depend on seed
+                ScheduledTask respawnDelay = new ScheduledTask(leaf, respawnTime,false, respawn);
+            });
+        };
+
+        // leaves fall
+        float lifeTime = 10 + (float) new Random().nextInt(UPPER_LIFETIME_BOUND);
+        // TODO change random to depend on seed
+        Runnable fall = ()->{
+            leaf.transform().setVelocityY(LEAF_DROP_RATE);
+            Transition<Float> horizontal = new Transition<>(leaf, leaf.transform()::setVelocityX,
+                    LEFT_HORIZONTAL, RIGHT_HORIZONTAL, Transition.CUBIC_INTERPOLATOR_FLOAT, HORIZONTAL_TIME,
+                    Transition.TransitionType.TRANSITION_BACK_AND_FORTH, null);
+            fade.run();
+        };
+        ScheduledTask fallDelay = new ScheduledTask(leaf, lifeTime, false, fall);
+
     }
 
 }
