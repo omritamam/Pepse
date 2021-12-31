@@ -68,7 +68,8 @@ public class Tree {
 //        BiPredicate<Integer, Integer> leavesDensity = (i, j)->
 //                ((Math.abs(LEAF_SLOTS - i) < LEAF_SLOTS / 2) && (Math.abs(LEAF_SLOTS - j) < LEAF_SLOTS / 2));   // TODO set density
         BiPredicate<Integer, Integer> leavesDensity = (i, j)->(true);
-        Leaves leaves = new Leaves(this.gameObjects, treeTop, this.layer + 1, LEAF_SLOTS, leavesDensity);
+        LeavesManager leaves = new LeavesManager(this.gameObjects, treeTop, this.layer + 1, LEAF_SLOTS,
+                leavesDensity, this.seed);
         leaves.createLeaves();
     }
 }
