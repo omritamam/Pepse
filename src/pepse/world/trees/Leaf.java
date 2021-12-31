@@ -1,6 +1,7 @@
 package pepse.world.trees;
 
 import danogl.GameObject;
+import danogl.collisions.Collision;
 import danogl.collisions.GameObjectCollection;
 import danogl.components.ScheduledTask;
 import danogl.components.Transition;
@@ -27,6 +28,7 @@ public class Leaf extends GameObject {
     private final Runnable respawn;
     private final GameObjectCollection gameObjects;
     private final int layer;
+    private Transition<Float> horizontal;
 
     /**
      * Construct a new GameObject instance.
@@ -71,7 +73,7 @@ public class Leaf extends GameObject {
 
     private void fall(){
         this.transform().setVelocityY(LEAF_DROP_RATE);
-        Transition<Float> horizontal = new Transition<>(this,
+        this.horizontal = new Transition<>(this,
                 this.transform()::setVelocityX, LEFT_HORIZONTAL, RIGHT_HORIZONTAL,
                 Transition.CUBIC_INTERPOLATOR_FLOAT, HORIZONTAL_TIME,
                 Transition.TransitionType.TRANSITION_BACK_AND_FORTH, null);
@@ -84,7 +86,12 @@ public class Leaf extends GameObject {
             // TODO change random to depend on seed
             ScheduledTask respawnDelay = new ScheduledTask(this, respawnTime,
                     false, this.respawn);
-//            this.gameObjects.removeGameObject(this, this.layer);
         });
+    }
+
+    @Override
+    public void onCollisionEnter(GameObject other, Collision collision) {
+        super.onCollisionEnter(other, collision);
+        this.removeComponent(this.horizontal);
     }
 }

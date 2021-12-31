@@ -13,7 +13,7 @@ import java.awt.*;
 import java.util.Random;
 import java.util.function.BiPredicate;
 
-public class LeavesManager {
+public class TreeTop {
     private static final Color LEAF_COLOR = new Color(50, 200, 30);
     private static final String TAG = "leaf";
     private static final Float STILL_ANGLE = -20f;
@@ -36,8 +36,8 @@ public class LeavesManager {
     private final int numOfSlots;
     private final int seed;
 
-    public LeavesManager(GameObjectCollection gameObjects, Vector2 treeTop, int layer, int numOfSlots,
-                         BiPredicate<Integer, Integer> density, int seed){
+    public TreeTop(GameObjectCollection gameObjects, Vector2 treeTop, int layer, int numOfSlots,
+                   BiPredicate<Integer, Integer> density, int seed){
         this.gameObjects = gameObjects;
         this.baseLocX = treeTop.x() - ((((float) numOfSlots / 2f) - 0.5f) * Block.SIZE);
         this.baseLocY = treeTop.y() - ((numOfSlots - 1) * Block.SIZE);
