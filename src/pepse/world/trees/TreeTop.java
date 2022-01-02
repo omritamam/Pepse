@@ -10,23 +10,10 @@ import pepse.util.ColorSupplier;
 import pepse.world.Block;
 
 import java.awt.*;
-import java.util.Random;
 import java.util.function.BiPredicate;
 
 public class TreeTop {
     private static final Color LEAF_COLOR = new Color(50, 200, 30);
-    private static final String TAG = "leaf";
-    private static final Float STILL_ANGLE = -20f;
-    private static final Float TURNED_ANGLE = 30f;
-    private static final Float TURNCYCLE_LENGTH = 5f;
-    private static final Vector2 STILL_DIM = new Vector2(25, 45);
-    private static final Vector2 TURNED_DIM = new Vector2(30, 30);
-    private static final int FADEOUT_TIME = 20;
-    private static final int HORIZONTAL_TIME = 5;
-    private static final float LEFT_HORIZONTAL = -10;
-    private static final float RIGHT_HORIZONTAL = 10;
-    private static final float LEAF_DROP_RATE = 20;
-    private static final int UPPER_LIFETIME_BOUND = 60;
 
     private final float baseLocX;
     private final float baseLocY;

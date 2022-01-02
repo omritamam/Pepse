@@ -7,7 +7,10 @@ import danogl.components.ScheduledTask;
 import danogl.components.Transition;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
+import pepse.Layers;
+import pepse.PepseGameManager;
 
+import java.util.Objects;
 import java.util.Random;
 
 public class Leaf extends GameObject {
@@ -19,16 +22,19 @@ public class Leaf extends GameObject {
     private static final Vector2 TURNED_DIM = new Vector2(30, 30);
     private static final int FADEOUT_TIME = 20;
     private static final int HORIZONTAL_TIME = 5;
-    private static final float LEFT_HORIZONTAL = -10;
-    private static final float RIGHT_HORIZONTAL = 10;
+    private static final float LEFT_HORIZONTAL = -20;
+    private static final float RIGHT_HORIZONTAL = 20;
     private static final float LEAF_DROP_RATE = 20;
     private static final int UPPER_LIFETIME_BOUND = 60;
 
     private final int seed;
     private final Runnable respawn;
     private final GameObjectCollection gameObjects;
-    private final int layer;
+    private final float[] hashFactors;
+    private int layer;
     private Transition<Float> horizontal;
+    private Transition<Float> angleTransition;
+    private Transition<Vector2> widthTransition;
 
     /**
      * Construct a new GameObject instance.
@@ -45,27 +51,28 @@ public class Leaf extends GameObject {
         this.seed = seed;
         this.layer = layer;
         this.gameObjects = gameObjects;
+        this.hashFactors = new float[] {topLeftCorner.x(), topLeftCorner.y()};
         this.respawn = ()->{
             respawn.run();
             this.gameObjects.removeGameObject(this, this.layer);
         };
 
-        float turnTime = (float) Math.random();
-        // TODO change random to depend on seed
+        float turnTime = new Random(Objects.hash(
+                this.hashFactors[0], this.hashFactors[1], this.seed)).nextFloat();
         ScheduledTask turnDelay = new ScheduledTask(this, turnTime,false,
                 this::turn);
-        float lifeTime = 10 + (float) new Random().nextInt(UPPER_LIFETIME_BOUND);
-        // TODO change random to depend on seed
+        float lifeTime = (float) new Random(Objects.hash(
+                this.hashFactors[0], this.hashFactors[1], this.seed)).nextInt(UPPER_LIFETIME_BOUND);
         ScheduledTask fallDelay = new ScheduledTask(this, lifeTime, false,
                 this::fall);
     }
 
     private void turn(){
-        Transition<Float> angleTransition = new Transition<>(this,
+        this.angleTransition = new Transition<>(this,
                 this.renderer()::setRenderableAngle, STILL_ANGLE, TURNED_ANGLE,
                 Transition.CUBIC_INTERPOLATOR_FLOAT,TURNCYCLE_LENGTH,
                 Transition.TransitionType.TRANSITION_BACK_AND_FORTH, null);
-        Transition<Vector2> widthTransition = new Transition<>(this,
+        this.widthTransition = new Transition<>(this,
                 this::setDimensions, STILL_DIM, TURNED_DIM, Transition.CUBIC_INTERPOLATOR_VECTOR,
                 (TURNCYCLE_LENGTH) / 2,
                 Transition.TransitionType.TRANSITION_BACK_AND_FORTH, null);
@@ -73,6 +80,11 @@ public class Leaf extends GameObject {
 
     private void fall(){
         this.transform().setVelocityY(LEAF_DROP_RATE);
+        this.gameObjects.removeGameObject(this, this.layer);
+        this.layer++;
+        this.gameObjects.addGameObject(this, this.layer);
+        this.gameObjects.layers().shouldLayersCollide(PepseGameManager.layers.get(Layers.FALL),
+                PepseGameManager.layers.get(Layers.GROUND), true);
         this.horizontal = new Transition<>(this,
                 this.transform()::setVelocityX, LEFT_HORIZONTAL, RIGHT_HORIZONTAL,
                 Transition.CUBIC_INTERPOLATOR_FLOAT, HORIZONTAL_TIME,
@@ -82,8 +94,8 @@ public class Leaf extends GameObject {
 
     private void fade(){
         this.renderer().fadeOut(FADEOUT_TIME, ()->{
-            float respawnTime = (float) Math.random();
-            // TODO change random to depend on seed
+            float respawnTime = Objects.hash(
+                    Objects.hash(this.hashFactors[0], this.hashFactors[1], this.seed));
             ScheduledTask respawnDelay = new ScheduledTask(this, respawnTime,
                     false, this.respawn);
         });
@@ -92,6 +104,9 @@ public class Leaf extends GameObject {
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
+        this.setVelocity(Vector2.ZERO);
         this.removeComponent(this.horizontal);
+        this.removeComponent(this.angleTransition);
+        this.removeComponent(this.widthTransition);
     }
 }

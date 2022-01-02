@@ -50,12 +50,18 @@ public class Terrain {
     private void createColumn(float x) {
         float minY = (float) (Math.floor(groundHeightAt(x) / Block.SIZE) * Block.SIZE);
         float maxY = windowDimensions.y();
+        int depth_i = 0;
+        int layer = this.groundLayer;
         // TODO what abput TERRAIN_DEPTH?
         for(float curY = minY; curY < maxY; curY+=Block.SIZE){
             GameObject block = new Block(new Vector2(x,curY)
                     ,new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR)));
             block.setTag(TAG);
-            gameObjects.addGameObject(block, groundLayer);
+            if (depth_i == 2){
+                layer += 1;
+            }
+            gameObjects.addGameObject(block, layer);
+            layer++;
         }
     }
 }

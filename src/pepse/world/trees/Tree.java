@@ -37,24 +37,25 @@ public class Tree {
     public void createInRange(int minX, int maxX){
         minX = (int) (Math.floor(minX / Block.SIZE) * Block.SIZE);
         for(int curX  = minX; curX<maxX; curX +=Block.SIZE){
-            if (Math.random() < TREE_CHANCE){
+            if (new Random(Objects.hash(curX, this.seed)).nextDouble() < TREE_CHANCE){
                 plant(curX);
             }
         }
     }
 
     private void plant(float x){
+        // TODO check groundheightat
         float y = this.groundHeightAt.apply(x);
         for (int i = 0; i < BASE_TRUNK; i++) {
-            addTrunkBlock(x, y - i * Block.SIZE);
+            addTrunkBlock(x, y - (i + 1) * Block.SIZE);
         }
         int ind = BASE_TRUNK;
-        Random randFactor = new Random(Objects.hash(60, this.seed));
+        Random randFactor = new Random(Objects.hash(x, this.seed));
         while (randFactor.nextDouble() < EXTRA_BLOCK_CHANCE){
             addTrunkBlock(x, y - ind * Block.SIZE);
             ind++;
         }
-        addLeaves(new Vector2(x, y - ind * Block.SIZE));
+        addTreeTop(new Vector2(x, y - ind * Block.SIZE));
     }
 
     private void addTrunkBlock(float x, float y){
@@ -64,12 +65,12 @@ public class Tree {
         this.gameObjects.addGameObject(block, this.layer);
     }
 
-    private void addLeaves(Vector2 treeTop) {
+    private void addTreeTop(Vector2 loc) {
 //        BiPredicate<Integer, Integer> leavesDensity = (i, j)->
 //                ((Math.abs(LEAF_SLOTS - i) < LEAF_SLOTS / 2) && (Math.abs(LEAF_SLOTS - j) < LEAF_SLOTS / 2));   // TODO set density
         BiPredicate<Integer, Integer> leavesDensity = (i, j)->(true);
-        TreeTop leaves = new TreeTop(this.gameObjects, treeTop, this.layer + 1, LEAF_SLOTS,
+        TreeTop treeTop = new TreeTop(this.gameObjects, loc, this.layer + 1, LEAF_SLOTS,
                 leavesDensity, this.seed);
-        leaves.createLeaves();
+        treeTop.createLeaves();
     }
 }
