@@ -8,7 +8,9 @@ import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
+import danogl.gui.rendering.Camera;
 import danogl.util.Vector2;
+import pepse.world.Avatar;
 import pepse.world.Sky;
 import pepse.world.daynight.Night;
 import pepse.world.daynight.Sun;
@@ -36,6 +38,7 @@ public class PepseGameManager extends GameManager {
     private double seed;
 
     public static void main(String[] args) {
+
         new PepseGameManager().run();
     }
 
@@ -57,14 +60,18 @@ public class PepseGameManager extends GameManager {
         terrain.createInRange(0, 1500);
         // create day-night cycle
         Night.create(gameObjects(),NIGHT_LAYER,windowDimensions,DAYNIGHT_CYCLE);
-        GameObject sun = Sun.create(gameObjects(), SUN_LAYER, windowDimensions,
-                DAYNIGHT_CYCLE);
+        GameObject sun = Sun.create(gameObjects(), SUN_LAYER, windowDimensions, DAYNIGHT_CYCLE);
         GameObject sunHalo = SunHalo.create(gameObjects(), HALO_LAYER, sun, HALO_COLOR);
         sunHalo.addComponent((d)->sunHalo.setCenter(sun.getCenter()));
         // create trees
         Tree treeManager = new Tree(gameObjects(), TREE_LAYER, terrain::groundHeightAt, (int) this.seed);
         // TODO check range numbers
         treeManager.createInRange(0, 1500);
+        //TODO change topLeftCornera and Layer
+        Vector2 avaterLocation = new Vector2(0,terrain.groundHeightAt(0f)-1.2f*Avatar.DIEMNSIONS.y());
+        Avatar avatar = Avatar.create(gameObjects(),Layer.DEFAULT,avaterLocation,inputListener, imageReader);
+        //TODO: set camera
+        //Camera camera = new Camera()
     }
 
     private void defineLayers(){
