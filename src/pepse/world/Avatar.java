@@ -127,4 +127,8 @@ public class Avatar extends GameObject {
         System.out.println(Power);
         setVelocity(movementDir);
     }
+
+    public double getPower() {
+        return Power;
+    }
 }
