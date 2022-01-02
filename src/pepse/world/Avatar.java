@@ -20,7 +20,7 @@ public class Avatar extends GameObject {
     private static final String[] WALKING_IMAGES_PATHS = new String[]{
             "pepse/assets/player/walking 1.png" , "pepse/assets/player/walking 2.png" };
     private static final String[] FALLING_IMAGES_PATHS = new String[]{
-            "pepse/assets/player/falling 1.png" , "pepse/assets/player/falling 2.png", "pepse/assets/player/falling 3.png" };
+            "pepse/assets/player/falling 2.png", "pepse/assets/player/falling 3.png" };
 
     private static final float MOVEMENT_SPEED = 300;
     private static final float GRAVITY = 3000;
@@ -54,9 +54,8 @@ public class Avatar extends GameObject {
         FlyingAnimation = createAnimationRenderer(imageReader,FLYING_IMAGES_PATHS,0.2);
         JumpingAnimation = createAnimationRenderer(imageReader,JUMPING_IMAGES_PATHS,0.6);
         FallingAnimation = createAnimationRenderer(imageReader,FALLING_IMAGES_PATHS,0.75);
-        WalkingRenderable = createAnimationRenderer(imageReader,WALKING_IMAGES_PATHS,0.8);
+        WalkingRenderable = createAnimationRenderer(imageReader,WALKING_IMAGES_PATHS,0.4);
         StandingRenderable = imageReader.readImage(STANDING_IMAGE_PATH,true);
-
     }
 
     private static AnimationRenderable createAnimationRenderer(ImageReader imageReader, String[] imagesPaths, double timeBetweenClips) {
@@ -73,17 +72,19 @@ public class Avatar extends GameObject {
                          UserInputListener inputListener,
                          ImageReader imageReader){
         Avatar.inputListener = inputListener;
-        Avatar avatar = new Avatar(topLeftCorner,DIEMNSIONS,imageReader.readImage(STANDING_IMAGE_PATH,true));
+        Avatar avatar = new AvatarPowerWindowDecorator(topLeftCorner,DIEMNSIONS,imageReader.readImage(STANDING_IMAGE_PATH,true));
         gameObjects.addGameObject(avatar,layer);
         avatar.transform().setAccelerationY(GRAVITY);
         avatar.physics().preventIntersectionsFromDirection(Vector2.ZERO);
         instansiateAnimations(imageReader);
+        avatar.setTag("Avatar");
         return avatar;
     }
 
     @Override
     public void update(float deltaTime) {
         //TODO: ADD sitting render
+        //add sound
         super.update(deltaTime);
         Vector2 movementDir = Vector2.ZERO;
         if(transform().getVelocity().x()==0 && transform().getVelocity().y() == 0){
@@ -124,7 +125,6 @@ public class Avatar extends GameObject {
                 Power = Math.min(100, Power + 0.5);
             }
         }
-        System.out.println(Power);
         setVelocity(movementDir);
     }
 
