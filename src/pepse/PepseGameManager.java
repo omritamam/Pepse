@@ -51,29 +51,29 @@ public class PepseGameManager extends GameManager {
         this.seed = new Random().nextGaussian() * 255;
 
         // create sky
-        Sky.create(gameObjects(),windowDimensions, SKY_LAYER);
+        Sky.create(gameObjects(), windowDimensions, SKY_LAYER);
         // create terrain
-        Terrain terrain = new Terrain(gameObjects(), GROUND_LAYER,windowDimensions,(int) seed);
+        Terrain terrain = new Terrain(gameObjects(), GROUND_LAYER, windowDimensions, (int) seed);
 //        int cameraDimensions = (int) super.camera().getDimensions().x();
 //        terrain.createInRange(cameraDimensions, cameraDimensions + (int) windowDimensions.x());
         // TODO check range numbers
         terrain.createInRange(0, 1500);
         // create day-night cycle
-        Night.create(gameObjects(),NIGHT_LAYER,windowDimensions,DAYNIGHT_CYCLE);
+        Night.create(gameObjects(), NIGHT_LAYER, windowDimensions, DAYNIGHT_CYCLE);
         GameObject sun = Sun.create(gameObjects(), SUN_LAYER, windowDimensions, DAYNIGHT_CYCLE);
         GameObject sunHalo = SunHalo.create(gameObjects(), HALO_LAYER, sun, HALO_COLOR);
-        sunHalo.addComponent((d)->sunHalo.setCenter(sun.getCenter()));
+        sunHalo.addComponent((d) -> sunHalo.setCenter(sun.getCenter()));
         // create trees
         Tree treeManager = new Tree(gameObjects(), TREE_LAYER, terrain::groundHeightAt, (int) this.seed);
         // TODO check range numbers
         treeManager.createInRange(0, 1500);
         //TODO change topLeftCornera and Layer
-        Vector2 avaterLocation = new Vector2(0,terrain.groundHeightAt(0f)-1.2f*Avatar.DIEMNSIONS.y());
-        Avatar avatar = Avatar.create(gameObjects(),Layer.DEFAULT,avaterLocation,inputListener, imageReader);
-        //TODO: set camera
-        //Camera camera = new Camera()
+        float avatarInitalLocationX = windowDimensions.y()*0.5f;
+        Vector2 avaterLocation = new Vector2(avatarInitalLocationX, terrain.groundHeightAt(avatarInitalLocationX) - 1.2f * Avatar.DIEMNSIONS.y());
+        Avatar avatar = Avatar.create(gameObjects(), Layer.DEFAULT, avaterLocation, inputListener, imageReader);
+        setCamera(new Camera(avatar, windowController.getWindowDimensions().mult(0.5f).subtract(avaterLocation), windowController.getWindowDimensions(),
+                windowController.getWindowDimensions()));
     }
-
     private void defineLayers(){
         this.layers.put(Layers.SKY, SKY_LAYER);
         this.layers.put(Layers.SUN, SUN_LAYER);
