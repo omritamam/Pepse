@@ -32,8 +32,8 @@ public class PepseGameManager extends GameManager {
     private static final int DAYNIGHT_CYCLE = 30;
     private static final Color HALO_COLOR = new Color(255, 255, 0, 20);
 
-    private double seed;
     public static EnumMap<Layers, Integer> layers = new EnumMap<Layers, Integer>(Layers.class);
+    private double seed;
 
     public static void main(String[] args) {
         new PepseGameManager().run();
@@ -45,12 +45,11 @@ public class PepseGameManager extends GameManager {
         defineLayers();
         Vector2 windowDimensions = windowController.getWindowDimensions();
         windowController.setTargetFramerate(FRAME_RATE);
+        this.seed = new Random().nextGaussian() * 255;
 
         // create sky
         Sky.create(gameObjects(),windowDimensions, SKY_LAYER);
         // create terrain
-        this.seed = new Random().nextGaussian() * 255;
-        // TODO check seed
         Terrain terrain = new Terrain(gameObjects(), GROUND_LAYER,windowDimensions,(int) seed);
 //        int cameraDimensions = (int) super.camera().getDimensions().x();
 //        terrain.createInRange(cameraDimensions, cameraDimensions + (int) windowDimensions.x());

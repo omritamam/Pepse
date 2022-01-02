@@ -37,7 +37,6 @@ public class Terrain {
 
     public float groundHeightAt(float x) {
         return (float) (noiseGenerator.noise(x)*Block.SIZE*CROOKEDNESS_FACTOR+groundHeightAtX0);
-
     }
 
     public void createInRange(int minX, int maxX) {
