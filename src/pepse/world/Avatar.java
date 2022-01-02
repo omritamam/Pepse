@@ -20,7 +20,7 @@ public class Avatar extends GameObject {
     private static final String[] WALKING_IMAGES_PATHS = new String[]{
             "pepse/assets/player/walking 1.png" , "pepse/assets/player/walking 2.png" };
     private static final String[] FALLING_IMAGES_PATHS = new String[]{
-            "pepse/assets/player/falling 2.png", "pepse/assets/player/falling 3.png" };
+            "pepse/assets/player/falling 0.png", "pepse/assets/player/falling 1.png" };
 
     private static final float MOVEMENT_SPEED = 300;
     private static final float GRAVITY = 3000;
@@ -117,14 +117,13 @@ public class Avatar extends GameObject {
                     renderer().setRenderable(JumpingAnimation);
                 }
             }
-        else{
-            if(transform().getVelocity().y() > 0){
-                renderer().setRenderable(FallingAnimation);
-            }
-            else {
-                Power = Math.min(100, Power + 0.5);
-            }
+        if(transform().getVelocity().y() > 0){
+            renderer().setRenderable(FallingAnimation);
         }
+        else {
+            Power = Math.min(100, Power + 0.5);
+        }
+
         setVelocity(movementDir);
     }
 
