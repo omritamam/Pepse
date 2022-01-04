@@ -18,8 +18,7 @@ import pepse.world.daynight.SunHalo;
 import pepse.world.trees.Tree;
 
 import java.awt.*;
-import java.util.EnumMap;
-import java.util.Random;
+import java.util.*;
 
 public class PepseGameManager extends GameManager {
     private static final int FRAME_RATE = 60;
@@ -31,31 +30,47 @@ public class PepseGameManager extends GameManager {
     private static final int LEAVES_LAYER = TREE_LAYER + 1;
     private static final int FALL_LAYER = LEAVES_LAYER + 1;
     private static final int NIGHT_LAYER = Layer.FOREGROUND;
+    private static final int AVATAR_LAYER = Layer.DEFAULT;
     private static final int DAYNIGHT_CYCLE = 30;
     private static final Color HALO_COLOR = new Color(255, 255, 0, 20);
+
+    /**
+     * TODO
+     * terrain lower limit
+     * terrain-ground level
+     * can't go through tree trunks - V
+     * delete out of scope objects - V
+     * jump higher?
+     * energy window location?
+     * bonus - leaves density?
+     */
+
     private int CurrentMinX;
     private int CurrentMaxX;
-
     public static EnumMap<Layers, Integer> layers = new EnumMap<Layers, Integer>(Layers.class);
+    private static HashMap<String, Layers> tagToLayer = new HashMap<>();    // TODO
     private double seed;
     private WindowController windowController;
     private int windowWidth;
     private Terrain terrain;
     private Tree treeManager;
+    private HashSet<Enum> enviromentLayers = new HashSet<>();
+
 
     public static void main(String[] args) {
-
         new PepseGameManager().run();
     }
 
     @Override
-    public void initializeGame(ImageReader imageReader, SoundReader soundReader, UserInputListener inputListener, WindowController windowController) {
+    public void initializeGame(ImageReader imageReader, SoundReader soundReader,
+                               UserInputListener inputListener, WindowController windowController) {
         this.windowController = windowController;
         super.initializeGame(imageReader,
                 soundReader,
                 inputListener,
                 windowController);
         defineLayers();
+        defineEnviromentLayers();
         Vector2 windowDimensions = windowController.getWindowDimensions();
         windowController.setTargetFramerate(FRAME_RATE);
         this.seed = new Random().nextGaussian() * 255;
@@ -78,9 +93,10 @@ public class PepseGameManager extends GameManager {
         //TODO change Layer from Layer.DEFAULT to enum Layer value
         float avatarInitalLocationX = windowDimensions.y()*0.5f;
         Vector2 avaterLocation = new Vector2(avatarInitalLocationX, terrain.groundHeightAt(avatarInitalLocationX) - 1.2f * Avatar.DIEMNSIONS.y());
-        Avatar avatar = Avatar.create(gameObjects(), Layer.DEFAULT, avaterLocation, inputListener, imageReader);
+        Avatar avatar = Avatar.create(gameObjects(), AVATAR_LAYER, avaterLocation, inputListener, imageReader);
         setCamera(new Camera(avatar, windowController.getWindowDimensions().mult(0.5f).subtract(avaterLocation), windowController.getWindowDimensions(),
                 windowController.getWindowDimensions()));
+        gameObjects().layers().shouldLayersCollide(AVATAR_LAYER, TREE_LAYER, true);
     }
 
     @Override
@@ -100,8 +116,9 @@ public class PepseGameManager extends GameManager {
             float locationX = gameObject.getTopLeftCorner().x();
             if(locationX<CurrentMinX || locationX > CurrentMaxX){
                 //TODO: wont work on object that arent in the deafault layer
-                gameObjects().removeGameObject(gameObject);
-
+                for (var layer :this.enviromentLayers) {
+                    gameObjects().removeGameObject(gameObject, layers.get(layer));
+                }
             }
         }
     }
@@ -115,5 +132,13 @@ public class PepseGameManager extends GameManager {
         this.layers.put(Layers.LEAVES, LEAVES_LAYER);
         this.layers.put(Layers.FALL, FALL_LAYER);
         this.layers.put(Layers.NIGHT, NIGHT_LAYER);
+        this.layers.put(Layers.AVATAR, AVATAR_LAYER);
+    }
+
+    private void defineEnviromentLayers(){
+        this.enviromentLayers.add(Layers.GROUND);
+        this.enviromentLayers.add(Layers.TREE);
+        this.enviromentLayers.add(Layers.LEAVES);
+        this.enviromentLayers.add(Layers.FALL);
     }
 }

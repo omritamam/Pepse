@@ -8,5 +8,6 @@ public enum Layers {
     TREE,
     LEAVES,
     FALL,
-    NIGHT;
+    NIGHT,
+    AVATAR;
 }

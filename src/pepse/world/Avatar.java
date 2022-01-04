@@ -26,7 +26,9 @@ public class Avatar extends GameObject {
     private static final float GRAVITY = 3000;
     private static final float JUMP_SPEED = 2500;
     private static final float FLYING_SPEED = 250;
+    private static final String TAG = "Avatar";
     public static Vector2 DIEMNSIONS = new Vector2(100,100);
+
     private static UserInputListener inputListener;
     private static AnimationRenderable WalkingRenderable;
     private double Power = 100;
@@ -77,7 +79,7 @@ public class Avatar extends GameObject {
         avatar.transform().setAccelerationY(GRAVITY);
         avatar.physics().preventIntersectionsFromDirection(Vector2.ZERO);
         instansiateAnimations(imageReader);
-        avatar.setTag("Avatar");
+        avatar.setTag(TAG);
         return avatar;
     }
 
