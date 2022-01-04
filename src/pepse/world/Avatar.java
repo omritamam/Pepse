@@ -29,9 +29,9 @@ public class Avatar extends GameObject {
     private static final String TAG = "Avatar";
     public static Vector2 DIEMNSIONS = new Vector2(100,100);
 
+    private double Power = 100;
     private static UserInputListener inputListener;
     private static AnimationRenderable WalkingRenderable;
-    private double Power = 100;
     private static AnimationRenderable JumpingAnimation = null;
     private static AnimationRenderable FlyingAnimation = null;
     private static ImageRenderable StandingRenderable = null;
@@ -53,6 +53,7 @@ public class Avatar extends GameObject {
         if (JumpingAnimation != null) {
             return;
         }
+        // TODO numbers in constants
         FlyingAnimation = createAnimationRenderer(imageReader,FLYING_IMAGES_PATHS,0.2);
         JumpingAnimation = createAnimationRenderer(imageReader,JUMPING_IMAGES_PATHS,0.6);
         FallingAnimation = createAnimationRenderer(imageReader,FALLING_IMAGES_PATHS,0.75);

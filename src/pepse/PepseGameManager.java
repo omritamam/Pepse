@@ -40,21 +40,21 @@ public class PepseGameManager extends GameManager {
      * terrain-ground level
      * can't go through tree trunks - V
      * delete out of scope objects - V
+     * numbers in constants (in avatar)
      * jump higher?
      * energy window location?
      * bonus - leaves density?
      */
 
+    public static EnumMap<Layers, Integer> layers = new EnumMap<Layers, Integer>(Layers.class);
+    private static HashSet<Enum> enviromentLayers = new HashSet<>();
     private int CurrentMinX;
     private int CurrentMaxX;
-    public static EnumMap<Layers, Integer> layers = new EnumMap<Layers, Integer>(Layers.class);
-    private static HashMap<String, Layers> tagToLayer = new HashMap<>();    // TODO
     private double seed;
     private WindowController windowController;
     private int windowWidth;
     private Terrain terrain;
     private Tree treeManager;
-    private HashSet<Enum> enviromentLayers = new HashSet<>();
 
 
     public static void main(String[] args) {
@@ -115,7 +115,6 @@ public class PepseGameManager extends GameManager {
         for(GameObject gameObject : gameObjects()){
             float locationX = gameObject.getTopLeftCorner().x();
             if(locationX<CurrentMinX || locationX > CurrentMaxX){
-                //TODO: wont work on object that arent in the deafault layer
                 for (var layer :this.enviromentLayers) {
                     gameObjects().removeGameObject(gameObject, layers.get(layer));
                 }

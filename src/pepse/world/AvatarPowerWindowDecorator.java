@@ -12,9 +12,11 @@ import java.awt.*;
 
 public class AvatarPowerWindowDecorator extends Avatar{
     private static final Vector2 SCORE_WINDOW_DIEMNSIONS = new Vector2(80,20);
+    private static final int HIGH = 90;
+    private static final int LOW = 20;
+
     private final TextRenderable TextRenderable;
     private final GameObject scoreWindow;
-
 
     /**
      * Construct a new GameObject instance.
@@ -36,10 +38,10 @@ public class AvatarPowerWindowDecorator extends Avatar{
         super.update(deltaTime);
         double power = getPower();
         TextRenderable.setString(String.valueOf((int)power));
-        if(power>90){
+        if(power>HIGH){
             TextRenderable.setColor(Color.GREEN);
         }
-        else if(power>20){
+        else if(power>LOW){
             TextRenderable.setColor(Color.BLUE);
         }
         else{
