@@ -93,11 +93,12 @@ public class PepseGameManager extends GameManager {
         treeManager = new Tree(gameObjects(), TREE_LAYER, terrain::groundHeightAt, (int) this.seed);
         treeManager.createInRange(CurrentMinX, CurrentMaxX);
         float avatarInitalLocationX = windowDimensions.y()*0.5f;
-        Vector2 avaterLocation = new Vector2(avatarInitalLocationX, terrain.groundHeightAt(avatarInitalLocationX) - 1.2f * Avatar.DIEMNSIONS.y());
+        Vector2 avaterLocation = new Vector2(avatarInitalLocationX, terrain.groundHeightAt(avatarInitalLocationX) - 2 * Avatar.DIEMNSIONS.y());
         Avatar avatar = Avatar.create(gameObjects(), AVATAR_LAYER, avaterLocation, inputListener, imageReader);
         setCamera(new Camera(avatar, windowController.getWindowDimensions().mult(0.5f).subtract(avaterLocation), windowController.getWindowDimensions(),
                 windowController.getWindowDimensions()));
         gameObjects().layers().shouldLayersCollide(AVATAR_LAYER, TREE_LAYER, true);
+        gameObjects().layers().shouldLayersCollide(AVATAR_LAYER, GROUND_LAYER, true);
     }
 
     @Override

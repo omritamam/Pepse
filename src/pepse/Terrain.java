@@ -16,6 +16,8 @@ public class Terrain {
     private static final int TERRAIN_DEPTH = 20;
     private static final float CROOKEDNESS_FACTOR = 3.0F;
     private static final String TAG = "ground";
+    public static final float GROUND_DEPTH_FACTOR = 1.5f;
+    public static final int COLLIDING_GROUND_DEPTH = 3;
 
     private final GameObjectCollection gameObjects;
     private final int groundLayer;
@@ -41,29 +43,25 @@ public class Terrain {
 
     public void createInRange(int minX, int maxX) {
         minX = (int) (Math.floor(minX / Block.SIZE) * Block.SIZE);
-        for(int curX  = minX; curX<maxX; curX +=Block.SIZE){
+        for(int curX  = minX; curX < maxX; curX +=Block.SIZE){
             createColumn(curX);
         }
     }
 
     private void createColumn(float x) {
         float minY = (float) (Math.floor(groundHeightAt(x) / Block.SIZE) * Block.SIZE);
-        float maxY = windowDimensions.y()*1.5f;
+        float maxY = windowDimensions.y() * GROUND_DEPTH_FACTOR;
         int depth_i = 0;
         int layer = this.groundLayer;
-        // TODO what abput TERRAIN_DEPTH?
         for(float curY = minY; curY < maxY; curY+=Block.SIZE){
             GameObject block = new Block(new Vector2(x,curY)
                     ,new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR)));
             block.setTag(TAG);
-            if (depth_i == 2){
+            if (depth_i == COLLIDING_GROUND_DEPTH){
                 layer += 1;
             }
             gameObjects.addGameObject(block, layer);
-            layer++;
+            depth_i++;
         }
     }
-
-
-
 }
