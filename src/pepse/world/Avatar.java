@@ -1,6 +1,7 @@
 package pepse.world;
 
 import danogl.GameObject;
+import danogl.collisions.Collision;
 import danogl.collisions.GameObjectCollection;
 import danogl.gui.ImageReader;
 import danogl.gui.UserInputListener;
@@ -13,6 +14,8 @@ import java.awt.event.KeyEvent;
 
 public class Avatar extends GameObject {
     private static final String STANDING_IMAGE_PATH = "pepse/assets/player/standing avatar.png";
+    private static final String SITTING_IMAGE_PATH = "pepse/assets/player/sitting.png";
+
     private static final String[] JUMPING_IMAGES_PATHS = new String[]{
             "pepse/assets/player/jumping 1.png" , "pepse/assets/player/jumping 2.png", "pepse/assets/player/jumping 3.png"};
     private static final String[] FLYING_IMAGES_PATHS = new String[]{
@@ -23,9 +26,9 @@ public class Avatar extends GameObject {
             "pepse/assets/player/falling 0.png", "pepse/assets/player/falling 1.png" };
 
     private static final float MOVEMENT_SPEED = 300;
-    private static final float GRAVITY = 500;
-    private static final float JUMP_SPEED = 1000;
-    private static final float FLYING_SPEED = 500;
+    private static final float GRAVITY = 800;
+    private static final float JUMP_SPEED = 400;
+    private static final float FLYING_SPEED = 400;
     private static final String TAG = "Avatar";
     public static final int MAX_POWER = 100;
     public static final double POWER_UP_RESTING = 0.5;
@@ -34,11 +37,12 @@ public class Avatar extends GameObject {
 
     private double Power = 100;
     private static UserInputListener inputListener;
-    private static AnimationRenderable WalkingRenderable;
+    private static AnimationRenderable WalkingRenderable = null;
     private static AnimationRenderable JumpingAnimation = null;
     private static AnimationRenderable FlyingAnimation = null;
     private static ImageRenderable StandingRenderable = null;
     private static Renderable FallingAnimation = null;
+    private static Renderable SittingRenderable = null;
 
     /**
      * Construct a new GameObject instance.
@@ -62,6 +66,7 @@ public class Avatar extends GameObject {
         FallingAnimation = createAnimationRenderer(imageReader,FALLING_IMAGES_PATHS,0.75);
         WalkingRenderable = createAnimationRenderer(imageReader,WALKING_IMAGES_PATHS,0.4);
         StandingRenderable = imageReader.readImage(STANDING_IMAGE_PATH,true);
+        SittingRenderable = imageReader.readImage(SITTING_IMAGE_PATH,true);
     }
 
     private static AnimationRenderable createAnimationRenderer(ImageReader imageReader, String[] imagesPaths, double timeBetweenClips) {
@@ -88,51 +93,58 @@ public class Avatar extends GameObject {
     }
 
     @Override
+    public void onCollisionEnter(GameObject other, Collision collision) {
+        super.onCollisionEnter(other, collision);
+            setVelocity(Vector2.ZERO);
+            renderer().setRenderable(SittingRenderable);
+
+    }
+
+    @Override
     public void update(float deltaTime) {
         //TODO: ADD sitting render
         //add sound
         super.update(deltaTime);
-        Vector2 movementDir = Vector2.ZERO;
-        if(transform().getVelocity().x()==0 && transform().getVelocity().y() == 0){
+        if(transform().getVelocity().x() == 0 && transform().getVelocity().y() == 0){
             renderer().setRenderable(StandingRenderable);
         }
         //left-right
-        if(inputListener.isKeyPressed((KeyEvent.VK_LEFT))){
-            movementDir = Vector2.LEFT.mult(MOVEMENT_SPEED);
+        if(inputListener.isKeyPressed(KeyEvent.VK_LEFT)){
+            transform().setVelocityX(-MOVEMENT_SPEED);
             renderer().setIsFlippedHorizontally(true);
-            renderer().setRenderable(WalkingRenderable);
         }
-        else if(inputListener.isKeyPressed((KeyEvent.VK_RIGHT))){
-            movementDir = Vector2.RIGHT.mult(MOVEMENT_SPEED);
+        else if(inputListener.isKeyPressed(KeyEvent.VK_RIGHT)){
+            transform().setVelocityX(MOVEMENT_SPEED);
             renderer().setIsFlippedHorizontally(false);
-            renderer().setRenderable(WalkingRenderable);
         }
-
 
         if(inputListener.isKeyPressed(KeyEvent.VK_SPACE)){
                 //flying
                 if(Power > 0 && inputListener.isKeyPressed(KeyEvent.VK_SHIFT)){
+                    transform().setAccelerationY(0);
+                    transform().setVelocityY(-FLYING_SPEED);
                     renderer().setRenderable(FlyingAnimation);
-                    movementDir = movementDir.add(Vector2.UP.mult(FLYING_SPEED));
                     Power = Math.max(-POWER_UP_RESTING, Power - POWER_DOWN_FLYING);
+                    return;
                 }
+                //jumping
                 else if(transform().getVelocity().y() == 0){
-                    //jumping
-                    movementDir = movementDir.add(Vector2.UP.mult(JUMP_SPEED));
+                    transform().setVelocityY(-JUMP_SPEED);
                     renderer().setRenderable(JumpingAnimation);
                 }
-            }
-        if(transform().getVelocity().y() > 0){
-            //falling
-            renderer().setRenderable(FallingAnimation);
-            this.transform().setVelocityX(movementDir.x());
-            return;
         }
         else {
-            //standing
+            transform().setAccelerationY(GRAVITY);
+            if(transform().getVelocity().x()!=0){
+                renderer().setRenderable(WalkingRenderable);
+            }
+        }
+        if(transform().getVelocity().y() > 0.0f){
+            renderer().setRenderable(FallingAnimation);
+        }
+        else if(transform().getVelocity().y() == 0.0f){
             Power = Math.min(MAX_POWER, Power + POWER_UP_RESTING);
         }
-        setVelocity(movementDir);
     }
 
     public double getPower() {
