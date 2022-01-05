@@ -3,6 +3,7 @@ package pepse;
 import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
+import danogl.components.CoordinateSpace;
 import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
@@ -11,6 +12,7 @@ import danogl.gui.rendering.Camera;
 import danogl.util.Vector2;
 import pepse.world.Avatar;
 import pepse.world.Sky;
+import pepse.world.Terrain;
 import pepse.world.daynight.Night;
 import pepse.world.daynight.Sun;
 import pepse.world.daynight.SunHalo;
@@ -36,10 +38,15 @@ public class PepseGameManager extends GameManager {
     /**
      * TODO
      * avatar sound
+     * avatar movement
+     * leaves improvement
+     * numbers in constants (in avatar)
      * choose power screen
+     * bonus - leaves density?
      */
 
     public static EnumMap<Layers, Integer> layers = new EnumMap<Layers, Integer>(Layers.class);
+    private static HashSet<Enum> enviromentLayers = new HashSet<>();
     private int curMinX;
     private int curMaxX;
     private double seed;

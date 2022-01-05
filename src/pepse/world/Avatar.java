@@ -42,7 +42,6 @@ public class Avatar extends GameObject {
     private static AnimationRenderable FlyingAnimation = null;
     private static ImageRenderable StandingRenderable = null;
     private static Renderable FallingAnimation = null;
-    private static Renderable SittingRenderable = null;
 
     /**
      * Construct a new GameObject instance.
@@ -66,7 +65,6 @@ public class Avatar extends GameObject {
         FallingAnimation = createAnimationRenderer(imageReader,FALLING_IMAGES_PATHS,0.75);
         WalkingRenderable = createAnimationRenderer(imageReader,WALKING_IMAGES_PATHS,0.4);
         StandingRenderable = imageReader.readImage(STANDING_IMAGE_PATH,true);
-        SittingRenderable = imageReader.readImage(SITTING_IMAGE_PATH,true);
     }
 
     private static AnimationRenderable createAnimationRenderer(ImageReader imageReader, String[] imagesPaths, double timeBetweenClips) {
@@ -96,13 +94,10 @@ public class Avatar extends GameObject {
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
             setVelocity(Vector2.ZERO);
-            renderer().setRenderable(SittingRenderable);
-
     }
 
     @Override
     public void update(float deltaTime) {
-        //TODO: ADD sitting render
         //add sound
         super.update(deltaTime);
         if(transform().getVelocity().x() == 0 && transform().getVelocity().y() == 0){
@@ -120,12 +115,17 @@ public class Avatar extends GameObject {
 
         if(inputListener.isKeyPressed(KeyEvent.VK_SPACE)){
                 //flying
-                if(Power > 0 && inputListener.isKeyPressed(KeyEvent.VK_SHIFT)){
-                    transform().setAccelerationY(0);
-                    transform().setVelocityY(-FLYING_SPEED);
-                    renderer().setRenderable(FlyingAnimation);
-                    Power = Math.max(-POWER_UP_RESTING, Power - POWER_DOWN_FLYING);
-                    return;
+                if(inputListener.isKeyPressed(KeyEvent.VK_SHIFT)){
+                    if(Power > 0){
+                        transform().setAccelerationY(0);
+                        transform().setVelocityY(-FLYING_SPEED);
+                        renderer().setRenderable(FlyingAnimation);
+                        Power = Math.max(-POWER_UP_RESTING, Power - POWER_DOWN_FLYING);
+                        return;
+                    }
+                    else{
+                        transform().setAccelerationY(GRAVITY);
+                    }
                 }
                 //jumping
                 else if(transform().getVelocity().y() == 0){

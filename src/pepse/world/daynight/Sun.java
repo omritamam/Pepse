@@ -23,7 +23,6 @@ public class Sun {
             int layer,
             Vector2 windowDimensions,
             float cycleLength){
-//        Vector2 startPosition = new Vector2(windowDimensions.x() / 2, windowDimensions.y() / 2);
         GameObject sun = new GameObject(Vector2.ZERO, SIZE,
                 new OvalRenderable(Color.YELLOW));
         sun.setCenter(windowDimensions.mult(0.5f));
