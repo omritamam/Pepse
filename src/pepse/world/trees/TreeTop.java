@@ -27,7 +27,7 @@ public class TreeTop {
     public TreeTop(GameObjectCollection gameObjects, Vector2 treeTop, int layer, int numOfSlots,
                    BiPredicate<Integer, Integer> density, Color baseColor, int seed){
         this.gameObjects = gameObjects;
-        this.baseLocX = treeTop.x() - ((((float) numOfSlots / 2f) - 0.5f) * Block.SIZE);
+        this.baseLocX = treeTop.x() - (((float) numOfSlots / 2f) * Block.SIZE);
         this.baseLocY = treeTop.y() - ((numOfSlots - 1) * Block.SIZE);
         this.layer = layer;
         this.numOfSlots = numOfSlots;

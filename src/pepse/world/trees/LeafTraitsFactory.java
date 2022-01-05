@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.function.BiPredicate;
 
-public class LeafDensityFactory {
+public class LeafTraitsFactory {
 
     private final int leafSlots;
     private final int seed;
@@ -14,7 +14,7 @@ public class LeafDensityFactory {
             new Color(131, 38, 22),
             new Color(155, 108, 69)};
 
-    public LeafDensityFactory(int leafSlots, int seed){
+    public LeafTraitsFactory(int leafSlots, int seed){
         this.leafSlots = leafSlots;
         this.seed = seed;
     }

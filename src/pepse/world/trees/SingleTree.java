@@ -10,7 +10,6 @@ import java.awt.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Random;
-import java.util.function.BiPredicate;
 
 public class SingleTree {
     private static final Color TRUNK_COLOR = new Color(100, 50, 20);
@@ -23,7 +22,7 @@ public class SingleTree {
     private final int layer;
     private final int seed;
     private final Vector2 baseLoc;
-    private final LeafDensityFactory factory;
+    private final LeafTraitsFactory factory;
     private int height;
     private HashSet<Block> trunk = new HashSet<>();
     private TreeTop treeTop;
@@ -34,7 +33,7 @@ public class SingleTree {
         this.gameObjects = gameObjects;
         this.layer = layer;
         this.seed = seed;
-        this.factory = new LeafDensityFactory(LEAF_SLOTS, this.seed);
+        this.factory = new LeafTraitsFactory(LEAF_SLOTS, this.seed);
         plant();
     }
 

@@ -3,7 +3,6 @@ package pepse;
 import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
-import danogl.components.CoordinateSpace;
 import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
@@ -26,8 +25,9 @@ public class PepseGameManager extends GameManager {
     private static final int SKY_LAYER = Layer.BACKGROUND;
     private static final int SUN_LAYER = SKY_LAYER + 1;
     private static final int HALO_LAYER = SUN_LAYER + 1;
-    private static final int GROUND_LAYER = Layer.STATIC_OBJECTS;
-    private static final int TREE_LAYER = GROUND_LAYER + 10;
+    private static final int SURFACE_LAYER = Layer.STATIC_OBJECTS;
+    private static final int DEEP_GROUND_LAYER = SURFACE_LAYER + 1;
+    private static final int TREE_LAYER = SURFACE_LAYER + 10;
     private static final int LEAVES_LAYER = TREE_LAYER + 1;
     private static final int FALL_LAYER = LEAVES_LAYER + 1;
     private static final int NIGHT_LAYER = Layer.FOREGROUND;
@@ -39,10 +39,9 @@ public class PepseGameManager extends GameManager {
      * TODO
      * avatar sound
      * avatar movement
-     * leaves improvement
      * numbers in constants (in avatar)
+     * remove game objects
      * choose power screen
-     * bonus - leaves density?
      */
 
     public static EnumMap<Layers, Integer> layers = new EnumMap<Layers, Integer>(Layers.class);
@@ -78,7 +77,7 @@ public class PepseGameManager extends GameManager {
         // create sky
         Sky.create(gameObjects(), windowDimensions, SKY_LAYER);
         // create terrain
-        terrain = new Terrain(gameObjects(), GROUND_LAYER, windowDimensions, (int) seed);
+        terrain = new Terrain(gameObjects(), SURFACE_LAYER, windowDimensions, (int) seed);
         terrain.createInRange(curMinX, curMaxX);
         // create day-night cycle
         Night.create(gameObjects(), NIGHT_LAYER, windowDimensions, DAYNIGHT_CYCLE);
@@ -94,7 +93,8 @@ public class PepseGameManager extends GameManager {
         setCamera(new Camera(avatar, windowController.getWindowDimensions().mult(0.5f).subtract(avaterLocation), windowController.getWindowDimensions(),
                 windowController.getWindowDimensions()));
         gameObjects().layers().shouldLayersCollide(AVATAR_LAYER, TREE_LAYER, true);
-        gameObjects().layers().shouldLayersCollide(AVATAR_LAYER, GROUND_LAYER, true);
+        gameObjects().layers().shouldLayersCollide(AVATAR_LAYER, SURFACE_LAYER, true);
+        gameObjects().layers().shouldLayersCollide(LEAVES_LAYER, SURFACE_LAYER, false);
     }
 
     @Override
@@ -110,12 +110,16 @@ public class PepseGameManager extends GameManager {
             treeManager.createInRange(curMaxX, cameraLocationX + windowWidth );
             curMaxX = cameraLocationX + windowWidth;
         }
+        int counter=0;
         for(GameObject gameObject : gameObjects()){
             float locationX = gameObject.getTopLeftCorner().x();
             if(locationX< curMinX || locationX > curMaxX){
-                gameObjects().removeGameObject(gameObject, GROUND_LAYER);
+                gameObjects().removeGameObject(gameObject, SURFACE_LAYER);
+                gameObjects().removeGameObject(gameObject, DEEP_GROUND_LAYER);
             }
+            counter++;
         }
+        System.out.println(counter);
         this.treeManager.deleteOutOfRange(curMinX, curMaxX);
     }
 
@@ -123,7 +127,8 @@ public class PepseGameManager extends GameManager {
         this.layers.put(Layers.SKY, SKY_LAYER);
         this.layers.put(Layers.SUN, SUN_LAYER);
         this.layers.put(Layers.HALO, HALO_LAYER);
-        this.layers.put(Layers.GROUND, GROUND_LAYER);
+        this.layers.put(Layers.SURFACE, SURFACE_LAYER);
+        this.layers.put(Layers.DEEP_GROUND, DEEP_GROUND_LAYER);
         this.layers.put(Layers.TREE, TREE_LAYER);
         this.layers.put(Layers.LEAVES, LEAVES_LAYER);
         this.layers.put(Layers.FALL, FALL_LAYER);
