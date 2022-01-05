@@ -8,24 +8,25 @@ import pepse.util.ColorSupplier;
 import pepse.world.Block;
 
 import java.awt.*;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Random;
+import java.util.TreeMap;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 
 public class Tree {
-    private static final Color TRUNK_COLOR = new Color(100, 50, 20);
+
     private static final double TREE_CHANCE = 0.1;
-    private static final double EXTRA_BLOCK_CHANCE = 0.5;
-    private static final int BASE_TRUNK = 10;
-    private static final String TAG = "trunk";
-    private static final int LEAF_SLOTS = 7;
+
+
 
     private final GameObjectCollection gameObjects;
     private final int layer;
     private final int seed;
-
+    private TreeMap<Integer, SingleTree> trees = new TreeMap<>();
     private Function<Float, Float> groundHeightAt;
+
 
     public Tree(GameObjectCollection gameObjects, int layer, Function<Float, Float> groundHeightAt, int seed) {
         this.gameObjects = gameObjects;
@@ -38,41 +39,15 @@ public class Tree {
         minX = (int) (Math.floor(minX / Block.SIZE) * Block.SIZE);
         for(int curX  = minX; curX<maxX; curX +=Block.SIZE){
             if (new Random(Objects.hash(curX, this.seed)).nextDouble() < TREE_CHANCE){
-                plant(curX);
+                SingleTree singleTree = new SingleTree(new Vector2(curX, (float) (Math.floor(this.groundHeightAt.apply((float) curX) / Block.SIZE) * Block.SIZE)), this.gameObjects, this.layer, this.seed);
+                singleTree.plant();
+                this.trees.put(curX, singleTree);
             }
         }
     }
 
-    private void plant(float x){
-        // TODO check groundheightat
-        float y = (float) (Math.floor(this.groundHeightAt.apply(x) / Block.SIZE) * Block.SIZE);
-        for (int i = 0; i < BASE_TRUNK; i++) {
-            addTrunkBlock(x, y - (i + 1) * Block.SIZE);
-        }
-        int height = BASE_TRUNK;
-        Random randFactor = new Random(Objects.hash(x, this.seed));
-        while (randFactor.nextDouble() < EXTRA_BLOCK_CHANCE){
-            addTrunkBlock(x, y - height * Block.SIZE);
-            height++;
-        }
-        addTreeTop(new Vector2(x - 0.5f * Block.SIZE, y - height * Block.SIZE));
+    public void deleteOutOfRange(int minX, int maxX){
+        // TODO
     }
 
-    private void addTrunkBlock(float x, float y){
-        GameObject block = new Block(new Vector2(x, y),
-                new RectangleRenderable(ColorSupplier.approximateColor(TRUNK_COLOR)));
-        block.setTag(TAG);
-        this.gameObjects.addGameObject(block, this.layer);
-    }
-
-    private void addTreeTop(Vector2 loc) {
-        BiPredicate<Integer, Integer> leavesDensity = (i, j)->{
-            return (Math.abs(LEAF_SLOTS / 2 - i) < LEAF_SLOTS / 2) ||
-                    (Math.abs(LEAF_SLOTS / 2 - j) < LEAF_SLOTS / 2);
-        };   // TODO set density
-//        BiPredicate<Integer, Integer> leavesDensity = (i, j)->(true);
-        TreeTop treeTop = new TreeTop(this.gameObjects, loc, this.layer + 1, LEAF_SLOTS,
-                leavesDensity, this.seed);
-        treeTop.createLeaves();
-    }
 }

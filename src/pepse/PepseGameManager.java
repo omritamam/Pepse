@@ -42,6 +42,7 @@ public class PepseGameManager extends GameManager {
      * avatar sitting
      * avatar sound
      * avatar movement
+     * leaves improvement
      * numbers in constants (in avatar)
      * choose power screen
      * bonus - leaves density?
@@ -136,8 +137,8 @@ public class PepseGameManager extends GameManager {
 
     private void defineEnviromentLayers(){
         this.enviromentLayers.add(Layers.GROUND);
-        this.enviromentLayers.add(Layers.TREE);
-        this.enviromentLayers.add(Layers.LEAVES);
-        this.enviromentLayers.add(Layers.FALL);
+//        this.enviromentLayers.add(Layers.TREE);
+//        this.enviromentLayers.add(Layers.LEAVES);
+//        this.enviromentLayers.add(Layers.FALL);
     }
 }

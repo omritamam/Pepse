@@ -10,6 +10,7 @@ import pepse.util.ColorSupplier;
 import pepse.world.Block;
 
 import java.awt.*;
+import java.util.HashSet;
 import java.util.function.BiPredicate;
 
 public class TreeTop {
@@ -22,6 +23,7 @@ public class TreeTop {
     private final GameObjectCollection gameObjects;
     private final int numOfSlots;
     private final int seed;
+    private HashSet<Leaf> leaves = new HashSet<>();
 
     public TreeTop(GameObjectCollection gameObjects, Vector2 treeTop, int layer, int numOfSlots,
                    BiPredicate<Integer, Integer> density, int seed){
@@ -32,6 +34,7 @@ public class TreeTop {
         this.numOfSlots = numOfSlots;
         this.densityFunc = density;
         this.seed = seed;
+        createLeaves();
     }
 
     public void createLeaves(){
@@ -50,8 +53,15 @@ public class TreeTop {
         Leaf leaf = new Leaf(new Vector2(x, y), Vector2.ZERO,
                 new RectangleRenderable(ColorSupplier.approximateColor(LEAF_COLOR)), this.seed, this.layer,
                 this.gameObjects, ()->{createLeaf(i, j);});
+        leaves.add(leaf);
         this.gameObjects.addGameObject(leaf, this.layer);
+    }
 
+    public void removeLeaves(){
+        for (Leaf leaf : this.leaves) {
+            this.gameObjects.removeGameObject(leaf, layer);
+            this.gameObjects.removeGameObject(leaf, layer + 1);
+        }
     }
 
 }
