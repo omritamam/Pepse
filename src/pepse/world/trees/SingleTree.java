@@ -64,7 +64,7 @@ public class SingleTree {
 
     private void addTreeTop(Vector2 loc) {
         this.treeTop = new TreeTop(this.gameObjects, loc, this.layer + 1, LEAF_SLOTS,
-                this.factory.getDensity(loc.x()), this.seed);
+                this.factory.getDensity(loc.x()), this.factory.getColor(loc.x()), this.seed);
     }
 
     public void removeTree(){

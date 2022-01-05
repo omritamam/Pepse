@@ -36,15 +36,8 @@ public class PepseGameManager extends GameManager {
     /**
      * TODO
      * falling through terrain
-     * terrain-ground level
-     * expand terrain func
-     * avatar sitting
      * avatar sound
-     * avatar movement
-     * leaves improvement
-     * numbers in constants (in avatar)
      * choose power screen
-     * bonus - leaves density?
      */
 
     public static EnumMap<Layers, Integer> layers = new EnumMap<Layers, Integer>(Layers.class);

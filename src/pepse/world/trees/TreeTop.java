@@ -14,8 +14,6 @@ import java.util.HashSet;
 import java.util.function.BiPredicate;
 
 public class TreeTop {
-    private static final Color LEAF_COLOR = new Color(50, 200, 30);
-
     private final float baseLocX;
     private final float baseLocY;
     private final BiPredicate<Integer, Integer> densityFunc;
@@ -23,16 +21,18 @@ public class TreeTop {
     private final GameObjectCollection gameObjects;
     private final int numOfSlots;
     private final int seed;
+    private final Color baseColor;
     private HashSet<Leaf> leaves = new HashSet<>();
 
     public TreeTop(GameObjectCollection gameObjects, Vector2 treeTop, int layer, int numOfSlots,
-                   BiPredicate<Integer, Integer> density, int seed){
+                   BiPredicate<Integer, Integer> density, Color baseColor, int seed){
         this.gameObjects = gameObjects;
         this.baseLocX = treeTop.x() - ((((float) numOfSlots / 2f) - 0.5f) * Block.SIZE);
         this.baseLocY = treeTop.y() - ((numOfSlots - 1) * Block.SIZE);
         this.layer = layer;
         this.numOfSlots = numOfSlots;
         this.densityFunc = density;
+        this.baseColor = baseColor;
         this.seed = seed;
         createLeaves();
     }
@@ -51,7 +51,7 @@ public class TreeTop {
         float x = this.baseLocX + (i + 1) * Block.SIZE;
         float y = this.baseLocY + (j + 1) * Block.SIZE;
         Leaf leaf = new Leaf(new Vector2(x, y), Vector2.ZERO,
-                new RectangleRenderable(ColorSupplier.approximateColor(LEAF_COLOR)), this.seed, this.layer,
+                new RectangleRenderable(ColorSupplier.approximateColor(this.baseColor)), this.seed, this.layer,
                 this.gameObjects, ()->{createLeaf(i, j);});
         leaves.add(leaf);
         this.gameObjects.addGameObject(leaf, this.layer);

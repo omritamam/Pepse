@@ -61,11 +61,10 @@ public class Leaf extends GameObject {
                 this.hashFactors[0], this.hashFactors[1], this.seed)).nextFloat();
         ScheduledTask turnDelay = new ScheduledTask(this, turnTime,false,
                 this::turn);
-//        float lifeTime = (float) new Random(Objects.hash(
-//                this.hashFactors[0], this.hashFactors[1], this.seed)).nextInt(UPPER_LIFETIME_BOUND);
-//        ScheduledTask fallDelay = new ScheduledTask(this, lifeTime, false,
-//                this::fall);
-        // TODO uncomment
+        float lifeTime = (float) new Random(Objects.hash(
+                this.hashFactors[0], this.hashFactors[1], this.seed)).nextInt(UPPER_LIFETIME_BOUND);
+        ScheduledTask fallDelay = new ScheduledTask(this, lifeTime, false,
+                this::fall);
     }
 
     private void turn(){
