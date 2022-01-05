@@ -23,9 +23,9 @@ public class Avatar extends GameObject {
             "pepse/assets/player/falling 0.png", "pepse/assets/player/falling 1.png" };
 
     private static final float MOVEMENT_SPEED = 300;
-    private static final float GRAVITY = 3000;
-    private static final float JUMP_SPEED = 2500;
-    private static final float FLYING_SPEED = 250;
+    private static final float GRAVITY = 500;
+    private static final float JUMP_SPEED = 1000;
+    private static final float FLYING_SPEED = 500;
     private static final String TAG = "Avatar";
     public static Vector2 DIEMNSIONS = new Vector2(100,100);
 
@@ -122,10 +122,14 @@ public class Avatar extends GameObject {
             }
         if(transform().getVelocity().y() > 0){
             renderer().setRenderable(FallingAnimation);
+            this.transform().setVelocityX(movementDir.x());
+
+            return;
         }
         else {
             Power = Math.min(100, Power + 0.5);
         }
+        this.transform().setVelocityX(0);
 
         setVelocity(movementDir);
     }

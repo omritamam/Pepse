@@ -36,13 +36,14 @@ public class PepseGameManager extends GameManager {
 
     /**
      * TODO
-     * terrain lower limit
+     * falling through terrain
      * terrain-ground level
-     * can't go through tree trunks - V
-     * delete out of scope objects - V
+     * expand terrain func
+     * avatar sitting
+     * avatar sound
+     * avatar movement
      * numbers in constants (in avatar)
-     * jump higher?
-     * energy window location?
+     * choose power screen
      * bonus - leaves density?
      */
 
@@ -90,7 +91,6 @@ public class PepseGameManager extends GameManager {
         // create trees
         treeManager = new Tree(gameObjects(), TREE_LAYER, terrain::groundHeightAt, (int) this.seed);
         treeManager.createInRange(CurrentMinX, CurrentMaxX);
-        //TODO change Layer from Layer.DEFAULT to enum Layer value
         float avatarInitalLocationX = windowDimensions.y()*0.5f;
         Vector2 avaterLocation = new Vector2(avatarInitalLocationX, terrain.groundHeightAt(avatarInitalLocationX) - 1.2f * Avatar.DIEMNSIONS.y());
         Avatar avatar = Avatar.create(gameObjects(), AVATAR_LAYER, avaterLocation, inputListener, imageReader);

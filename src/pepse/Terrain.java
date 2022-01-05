@@ -48,7 +48,7 @@ public class Terrain {
 
     private void createColumn(float x) {
         float minY = (float) (Math.floor(groundHeightAt(x) / Block.SIZE) * Block.SIZE);
-        float maxY = windowDimensions.y();
+        float maxY = windowDimensions.y()*1.5f;
         int depth_i = 0;
         int layer = this.groundLayer;
         // TODO what abput TERRAIN_DEPTH?

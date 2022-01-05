@@ -45,7 +45,7 @@ public class Tree {
 
     private void plant(float x){
         // TODO check groundheightat
-        float y = this.groundHeightAt.apply(x);
+        float y = (float) (Math.floor(this.groundHeightAt.apply(x) / Block.SIZE) * Block.SIZE);
         for (int i = 0; i < BASE_TRUNK; i++) {
             addTrunkBlock(x, y - (i + 1) * Block.SIZE);
         }
