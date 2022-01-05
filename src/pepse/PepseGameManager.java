@@ -35,7 +35,6 @@ public class PepseGameManager extends GameManager {
 
     /**
      * TODO
-     * falling through terrain
      * avatar sound
      * choose power screen
      */
