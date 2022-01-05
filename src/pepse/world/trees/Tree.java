@@ -40,14 +40,24 @@ public class Tree {
         for(int curX  = minX; curX<maxX; curX +=Block.SIZE){
             if (new Random(Objects.hash(curX, this.seed)).nextDouble() < TREE_CHANCE){
                 SingleTree singleTree = new SingleTree(new Vector2(curX, (float) (Math.floor(this.groundHeightAt.apply((float) curX) / Block.SIZE) * Block.SIZE)), this.gameObjects, this.layer, this.seed);
-                singleTree.plant();
                 this.trees.put(curX, singleTree);
             }
         }
     }
 
     public void deleteOutOfRange(int minX, int maxX){
-        // TODO
+        Integer minOver = this.trees.higherKey(maxX);
+        Integer maxUnder = this.trees.lowerKey(minX);
+        if (minOver != null){
+            for (SingleTree singleTree : this.trees.tailMap(minOver).values()) {
+                singleTree.removeTree();
+            }
+        }
+        if (maxUnder != null){
+            for (SingleTree singleTree : this.trees.headMap(maxUnder).values()) {
+                singleTree.removeTree();
+            }
+        }
     }
 
 }

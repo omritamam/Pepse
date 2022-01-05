@@ -3,7 +3,6 @@ package pepse;
 import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
-import danogl.components.CoordinateSpace;
 import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
@@ -49,9 +48,8 @@ public class PepseGameManager extends GameManager {
      */
 
     public static EnumMap<Layers, Integer> layers = new EnumMap<Layers, Integer>(Layers.class);
-    private static HashSet<Enum> enviromentLayers = new HashSet<>();
-    private int CurrentMinX;
-    private int CurrentMaxX;
+    private int curMinX;
+    private int curMaxX;
     private double seed;
     private WindowController windowController;
     private int windowWidth;
@@ -72,18 +70,17 @@ public class PepseGameManager extends GameManager {
                 inputListener,
                 windowController);
         defineLayers();
-        defineEnviromentLayers();
         Vector2 windowDimensions = windowController.getWindowDimensions();
         windowController.setTargetFramerate(FRAME_RATE);
         this.seed = new Random().nextGaussian() * 255;
-        this.CurrentMinX = (int) -(0.5f * windowDimensions.x());
-        this.CurrentMaxX =  (int) (1.5f * windowDimensions.x());
+        this.curMinX = (int) -(0.5f * windowDimensions.x());
+        this.curMaxX =  (int) (1.5f * windowDimensions.x());
         this.windowWidth =  (int)  windowDimensions.x();
         // create sky
         Sky.create(gameObjects(), windowDimensions, SKY_LAYER);
         // create terrain
         terrain = new Terrain(gameObjects(), GROUND_LAYER, windowDimensions, (int) seed);
-        terrain.createInRange(CurrentMinX, CurrentMaxX);
+        terrain.createInRange(curMinX, curMaxX);
         // create day-night cycle
         Night.create(gameObjects(), NIGHT_LAYER, windowDimensions, DAYNIGHT_CYCLE);
         GameObject sun = Sun.create(gameObjects(), SUN_LAYER, windowDimensions, DAYNIGHT_CYCLE);
@@ -91,7 +88,7 @@ public class PepseGameManager extends GameManager {
         sunHalo.addComponent((d) -> sunHalo.setCenter(sun.getCenter()));
         // create trees
         treeManager = new Tree(gameObjects(), TREE_LAYER, terrain::groundHeightAt, (int) this.seed);
-        treeManager.createInRange(CurrentMinX, CurrentMaxX);
+        treeManager.createInRange(curMinX, curMaxX);
         float avatarInitalLocationX = windowDimensions.y()*0.5f;
         Vector2 avaterLocation = new Vector2(avatarInitalLocationX, terrain.groundHeightAt(avatarInitalLocationX) - 2 * Avatar.DIEMNSIONS.y());
         Avatar avatar = Avatar.create(gameObjects(), AVATAR_LAYER, avaterLocation, inputListener, imageReader);
@@ -105,23 +102,22 @@ public class PepseGameManager extends GameManager {
     public void update(float deltaTime) {
         super.update(deltaTime);
         int cameraLocationX = (int) camera().getCenter().x();
-        if(cameraLocationX - windowWidth < CurrentMinX){
-            terrain.createInRange(cameraLocationX - windowWidth, CurrentMinX);
-            treeManager.createInRange(cameraLocationX - windowWidth, CurrentMinX);
-            CurrentMinX = cameraLocationX - windowWidth;
-        } if(cameraLocationX + windowWidth > CurrentMaxX){
-            terrain.createInRange(CurrentMaxX, cameraLocationX + windowWidth );
-            treeManager.createInRange(CurrentMaxX, cameraLocationX + windowWidth );
-            CurrentMaxX = cameraLocationX + windowWidth;
+        if(cameraLocationX - windowWidth < curMinX){
+            terrain.createInRange(cameraLocationX - windowWidth, curMinX);
+            treeManager.createInRange(cameraLocationX - windowWidth, curMinX);
+            curMinX = cameraLocationX - windowWidth;
+        } if(cameraLocationX + windowWidth > curMaxX){
+            terrain.createInRange(curMaxX, cameraLocationX + windowWidth );
+            treeManager.createInRange(curMaxX, cameraLocationX + windowWidth );
+            curMaxX = cameraLocationX + windowWidth;
         }
         for(GameObject gameObject : gameObjects()){
             float locationX = gameObject.getTopLeftCorner().x();
-            if(locationX<CurrentMinX || locationX > CurrentMaxX){
-                for (var layer :this.enviromentLayers) {
-                    gameObjects().removeGameObject(gameObject, layers.get(layer));
-                }
+            if(locationX< curMinX || locationX > curMaxX){
+                gameObjects().removeGameObject(gameObject, GROUND_LAYER);
             }
         }
+        this.treeManager.deleteOutOfRange(curMinX, curMaxX);
     }
 
     private void defineLayers(){
@@ -136,10 +132,4 @@ public class PepseGameManager extends GameManager {
         this.layers.put(Layers.AVATAR, AVATAR_LAYER);
     }
 
-    private void defineEnviromentLayers(){
-        this.enviromentLayers.add(Layers.GROUND);
-//        this.enviromentLayers.add(Layers.TREE);
-//        this.enviromentLayers.add(Layers.LEAVES);
-//        this.enviromentLayers.add(Layers.FALL);
-    }
 }

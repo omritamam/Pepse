@@ -18,12 +18,12 @@ public class SingleTree {
     private static final String TAG = "trunk";
     private static final int BASE_TRUNK = 10;
     private static final int LEAF_SLOTS = 7;
-    private static final int TREE_KINDS = 4;
 
     private final GameObjectCollection gameObjects;
     private final int layer;
     private final int seed;
     private final Vector2 baseLoc;
+    private final LeafDensityFactory factory;
     private int height;
     private HashSet<Block> trunk = new HashSet<>();
     private TreeTop treeTop;
@@ -34,9 +34,11 @@ public class SingleTree {
         this.gameObjects = gameObjects;
         this.layer = layer;
         this.seed = seed;
+        this.factory = new LeafDensityFactory(LEAF_SLOTS, this.seed);
+        plant();
     }
 
-    public void plant(){
+    private void plant(){
         float x = this.baseLoc.x();
         float y = this.baseLoc.y();
         for (int i = 0; i < BASE_TRUNK; i++) {
@@ -61,36 +63,8 @@ public class SingleTree {
     }
 
     private void addTreeTop(Vector2 loc) {
-        BiPredicate<Integer, Integer> leavesDensity = getDensity(loc.x());
         this.treeTop = new TreeTop(this.gameObjects, loc, this.layer + 1, LEAF_SLOTS,
-                leavesDensity, this.seed);
-    }
-
-    private BiPredicate<Integer, Integer> getDensity(float x){
-        switch (pick(x)){
-            case 0:
-                return (i, j)->{
-                    return (Math.abs(LEAF_SLOTS / 2 - i) < LEAF_SLOTS / 2) ||
-                            (Math.abs(LEAF_SLOTS / 2 - j) < LEAF_SLOTS / 2);
-                };
-            case 1:
-                return (i, j)-> {
-                    return (Math.abs(LEAF_SLOTS / 3 - (i - 1)) < (LEAF_SLOTS / 3));
-                };
-            case 2:
-                return (i, j)->{
-                    return ((Math.abs(LEAF_SLOTS - i)) > (Math.abs(LEAF_SLOTS - j)) / 2)
-                            && ((Math.abs(i + 1)) > (Math.abs(LEAF_SLOTS - j)) / 2);
-                };
-            default:
-                return (i, j)->(true);
-        }
-
-    }
-
-    private int pick(float x){
-//        return new Random(Objects.hash(x, this.seed)).nextInt(TREE_KINDS);
-        return 0;
+                this.factory.getDensity(loc.x()), this.seed);
     }
 
     public void removeTree(){

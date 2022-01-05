@@ -37,7 +37,7 @@ public class TreeTop {
         createLeaves();
     }
 
-    public void createLeaves(){
+    private void createLeaves(){
         for (int i = 0; i < this.numOfSlots; i++) {
             for (int j = 0; j < this.numOfSlots; j++) {
                 if (this.densityFunc.test(i, j)){
