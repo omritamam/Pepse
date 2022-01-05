@@ -27,6 +27,9 @@ public class Avatar extends GameObject {
     private static final float JUMP_SPEED = 1000;
     private static final float FLYING_SPEED = 500;
     private static final String TAG = "Avatar";
+    public static final int MAX_POWER = 100;
+    public static final double POWER_UP_RESTING = 0.5;
+    public static final int POWER_DOWN_FLYING = 1;
     public static Vector2 DIEMNSIONS = new Vector2(100,100);
 
     private double Power = 100;
@@ -98,7 +101,6 @@ public class Avatar extends GameObject {
             movementDir = Vector2.LEFT.mult(MOVEMENT_SPEED);
             renderer().setIsFlippedHorizontally(true);
             renderer().setRenderable(WalkingRenderable);
-
         }
         else if(inputListener.isKeyPressed((KeyEvent.VK_RIGHT))){
             movementDir = Vector2.RIGHT.mult(MOVEMENT_SPEED);
@@ -112,7 +114,7 @@ public class Avatar extends GameObject {
                 if(Power > 0 && inputListener.isKeyPressed(KeyEvent.VK_SHIFT)){
                     renderer().setRenderable(FlyingAnimation);
                     movementDir = movementDir.add(Vector2.UP.mult(FLYING_SPEED));
-                    Power = Math.max(-0.5, Power-1);
+                    Power = Math.max(-POWER_UP_RESTING, Power - POWER_DOWN_FLYING);
                 }
                 else if(transform().getVelocity().y() == 0){
                     //jumping
@@ -121,16 +123,15 @@ public class Avatar extends GameObject {
                 }
             }
         if(transform().getVelocity().y() > 0){
+            //falling
             renderer().setRenderable(FallingAnimation);
             this.transform().setVelocityX(movementDir.x());
-
             return;
         }
         else {
-            Power = Math.min(100, Power + 0.5);
+            //standing
+            Power = Math.min(MAX_POWER, Power + POWER_UP_RESTING);
         }
-        this.transform().setVelocityX(0);
-
         setVelocity(movementDir);
     }
 
