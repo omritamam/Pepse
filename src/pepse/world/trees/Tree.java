@@ -64,6 +64,7 @@ public class Tree {
                 singleTree.removeTree();
                 this.trees.remove(treeX);
             }
+            head.clear();
         }
     }
 
