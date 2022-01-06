@@ -71,5 +71,6 @@ public class SingleTree {
         for (Block block : this.trunk) {
             this.gameObjects.removeGameObject(block, this.layer);
         }
+        this.trunk.clear();
     }
 }

@@ -37,10 +37,12 @@ public class PepseGameManager extends GameManager {
 
     /**
      * TODO
+     * bug: flying jumping
+     * bug: double leaves?
+     * bug: remove out of bounds
      * avatar sound
      * avatar movement
      * numbers in constants (in avatar)
-     * remove game objects
      * choose power screen
      */
 
@@ -71,9 +73,9 @@ public class PepseGameManager extends GameManager {
         Vector2 windowDimensions = windowController.getWindowDimensions();
         windowController.setTargetFramerate(FRAME_RATE);
         this.seed = new Random().nextGaussian() * 255;
-        this.curMinX = (int) -(0.5f * windowDimensions.x());
-        this.curMaxX =  (int) (1.5f * windowDimensions.x());
         this.windowWidth =  (int)  windowDimensions.x();
+        this.curMinX = (int) -(0.5f * windowWidth);
+        this.curMaxX =  (int) (1.5f * windowWidth);
         // create sky
         Sky.create(gameObjects(), windowDimensions, SKY_LAYER);
         // create terrain
@@ -87,11 +89,13 @@ public class PepseGameManager extends GameManager {
         // create trees
         treeManager = new Tree(gameObjects(), TREE_LAYER, terrain::groundHeightAt, (int) this.seed);
         treeManager.createInRange(curMinX, curMaxX);
+        // create avatar
         float avatarInitalLocationX = windowDimensions.y()*0.5f;
         Vector2 avaterLocation = new Vector2(avatarInitalLocationX, terrain.groundHeightAt(avatarInitalLocationX) - 2 * Avatar.DIEMNSIONS.y());
         Avatar avatar = Avatar.create(gameObjects(), AVATAR_LAYER, avaterLocation, inputListener, imageReader);
         setCamera(new Camera(avatar, windowController.getWindowDimensions().mult(0.5f).subtract(avaterLocation), windowController.getWindowDimensions(),
                 windowController.getWindowDimensions()));
+        // layers collision
         gameObjects().layers().shouldLayersCollide(AVATAR_LAYER, TREE_LAYER, true);
         gameObjects().layers().shouldLayersCollide(AVATAR_LAYER, SURFACE_LAYER, true);
         gameObjects().layers().shouldLayersCollide(LEAVES_LAYER, SURFACE_LAYER, false);
@@ -100,26 +104,41 @@ public class PepseGameManager extends GameManager {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
+        createInRange();
+        deleteOutOfRange();
+    }
+
+    private void createInRange(){
         int cameraLocationX = (int) camera().getCenter().x();
         if(cameraLocationX - windowWidth < curMinX){
             terrain.createInRange(cameraLocationX - windowWidth, curMinX);
             treeManager.createInRange(cameraLocationX - windowWidth, curMinX);
             curMinX = cameraLocationX - windowWidth;
-        } if(cameraLocationX + windowWidth > curMaxX){
+            curMaxX = cameraLocationX + windowWidth;
+        }
+        if(cameraLocationX + windowWidth > curMaxX){
             terrain.createInRange(curMaxX, cameraLocationX + windowWidth );
             treeManager.createInRange(curMaxX, cameraLocationX + windowWidth );
             curMaxX = cameraLocationX + windowWidth;
+            curMinX = cameraLocationX - windowWidth;
         }
+    }
+
+    private void deleteOutOfRange(){
         int counter=0;
-        for(GameObject gameObject : gameObjects()){
+//        System.out.println("curmin: "+curMinX+", curmax: "+curMaxX);
+        var goThrough = gameObjects();
+        for(GameObject gameObject : goThrough) {
             float locationX = gameObject.getTopLeftCorner().x();
             if(locationX< curMinX || locationX > curMaxX){
                 gameObjects().removeGameObject(gameObject, SURFACE_LAYER);
                 gameObjects().removeGameObject(gameObject, DEEP_GROUND_LAYER);
+//                System.out.println("delete");
             }
             counter++;
         }
         System.out.println(counter);
+        // TODO remove print and counter
         this.treeManager.deleteOutOfRange(curMinX, curMaxX);
     }
 

@@ -3,6 +3,7 @@ package pepse.world;
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
 import danogl.collisions.Layer;
+import danogl.components.GameObjectPhysics;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
 import pepse.util.ColorSupplier;
@@ -54,11 +55,11 @@ public class Terrain {
         int depth_i = 0;
         int layer = this.groundLayer;
         for(float curY = minY; curY < maxY; curY+=Block.SIZE){
-            GameObject block = new Block(new Vector2(x,curY)
+            Block block = new Block(new Vector2(x,curY)
                     ,new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR)));
             block.setTag(TAG);
             if (depth_i == COLLIDING_GROUND_DEPTH){
-                layer += 1;
+                layer++;
             }
             gameObjects.addGameObject(block, layer);
             depth_i++;

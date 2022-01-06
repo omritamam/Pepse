@@ -49,13 +49,20 @@ public class Tree {
         Integer minOver = this.trees.higherKey(maxX);
         Integer maxUnder = this.trees.lowerKey(minX);
         if (minOver != null){
-            for (SingleTree singleTree : this.trees.tailMap(minOver).values()) {
+            var tail = this.trees.tailMap(minOver).keySet();
+            for (int treeX : tail) {
+                SingleTree singleTree = this.trees.get(treeX);
                 singleTree.removeTree();
+                this.trees.remove(treeX);
             }
+            tail.clear();
         }
         if (maxUnder != null){
-            for (SingleTree singleTree : this.trees.headMap(maxUnder).values()) {
+            var head = this.trees.headMap(maxUnder).keySet();
+            for (int treeX : head) {
+                SingleTree singleTree = this.trees.get(treeX);
                 singleTree.removeTree();
+                this.trees.remove(treeX);
             }
         }
     }

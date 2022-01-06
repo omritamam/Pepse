@@ -53,6 +53,7 @@ public class Leaf extends Block {
         this.layer = layer;
         this.gameObjects = gameObjects;
         this.hashFactors = new float[] {topLeftCorner.x(), topLeftCorner.y()};
+        physics().setMass(0);
         this.respawn = ()->{
             respawn.run();
             this.gameObjects.removeGameObject(this, this.layer);

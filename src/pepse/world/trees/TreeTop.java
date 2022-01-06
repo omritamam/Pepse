@@ -41,20 +41,20 @@ public class TreeTop {
         for (int i = 0; i < this.numOfSlots; i++) {
             for (int j = 0; j < this.numOfSlots; j++) {
                 if (this.densityFunc.test(i, j)){
-                    createLeaf(i, j);
+                    leaves.add(createLeaf(i, j));
                 }
             }
         }
     }
 
-    private void createLeaf(int i, int j) {
+    private Leaf createLeaf(int i, int j) {
         float x = this.baseLocX + (i + 1) * Block.SIZE;
         float y = this.baseLocY + (j + 1) * Block.SIZE;
         Leaf leaf = new Leaf(new Vector2(x, y), Vector2.ZERO,
                 new RectangleRenderable(ColorSupplier.approximateColor(this.baseColor)), this.seed, this.layer,
                 this.gameObjects, ()->{createLeaf(i, j);});
-        leaves.add(leaf);
         this.gameObjects.addGameObject(leaf, this.layer);
+        return leaf;
     }
 
     public void removeLeaves(){
@@ -62,6 +62,7 @@ public class TreeTop {
             this.gameObjects.removeGameObject(leaf, layer);
             this.gameObjects.removeGameObject(leaf, layer + 1);
         }
+        this.leaves.clear();
     }
 
 }
