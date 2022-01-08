@@ -12,6 +12,14 @@ public class SunHalo {
     private static final Vector2 SIZE = new Vector2(250, 250);
     private static final String TAG = "halo";
 
+    /**
+     *
+     * @param gameObjects
+     * @param layer
+     * @param sun
+     * @param color
+     * @return
+     */
     public static GameObject create(GameObjectCollection gameObjects, int layer, GameObject sun, Color color){
         GameObject halo = new GameObject(Vector2.ZERO, SIZE, new OvalRenderable(color));
         halo.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);

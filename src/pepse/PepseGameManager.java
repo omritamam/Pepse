@@ -115,7 +115,6 @@ public class PepseGameManager extends GameManager {
         int cameraLocationX = (int) camera().getCenter().x();
         int newMinX = (int) (cameraLocationX - (0.5F + WINDOW_OFFSET_FACTOR) * windowWidth);
         int newMaxX = (int) (cameraLocationX + (0.5F + WINDOW_OFFSET_FACTOR) * windowWidth);
-
         if(newMinX < curMinX){
             terrain.createInRange(newMinX, curMinX);
             treeManager.createInRange(newMinX, curMinX);
@@ -126,7 +125,6 @@ public class PepseGameManager extends GameManager {
         }
         curMinX = newMinX;
         curMaxX = newMaxX;
-
     }
 
     private void deleteOutOfRange(){
@@ -135,17 +133,13 @@ public class PepseGameManager extends GameManager {
         System.out.print((int) avatar.getTopLeftCorner().x()+" avatar,");
         System.out.print((int) curMinX+" curMinX,");
         System.out.print((int) curMaxX+" curMaxX,");
-
-
         for(GameObject gameObject : gameObjects) {
             float locationX = gameObject.getTopLeftCorner().x();
-
             if(locationX < curMinX || locationX > curMaxX){
                 gameObjects.removeGameObject(gameObject, SURFACE_LAYER);
                 gameObjects.removeGameObject(gameObject, DEEP_GROUND_LAYER);
                 System.out.print((int)locationX);
                 System.out.print(gameObject.getTag() +",");
-
             }
             counter++;
         }

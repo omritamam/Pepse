@@ -18,6 +18,15 @@ public class Sun {
     private static final int BASE_RAD = 250;
     private static final int OVAL_RAD = 100;
 
+    /**
+     * This function creates a yellow circle that moves in the sky in an elliptical path (in camera coordinates).
+     *
+     * @param gameObjects - The collection of all participating game objects.
+     * @param layer - The number of the layer to which the created game object should be added.
+     * @param windowDimensions - The dimensions of the windows.
+     * @param cycleLength - The amount of seconds it should take the created game object to complete a full cycle.
+     * @return - A new game object representing the sun.
+     */
     public static GameObject create(
             GameObjectCollection gameObjects,
             int layer,
@@ -36,7 +45,6 @@ public class Sun {
         Transition<Float> transition = new Transition<Float>(sun, degreeChanger, INIT_DEG, FIN_DEG,
                 Transition.LINEAR_INTERPOLATOR_FLOAT, cycleLength, Transition.TransitionType.TRANSITION_LOOP,
                 null);
-
         return sun;
     }
 

@@ -33,6 +33,10 @@ public class Avatar extends GameObject {
     public static final int MAX_POWER = 100;
     public static final double POWER_UP_RESTING = 0.5;
     public static final int POWER_DOWN_FLYING = 1;
+    public static final double TIME_BETWEEN_CLIPS_FLYING = 0.2;
+    public static final double TIME_BETWEEN_CLIPS_JUMPING = 0.6;
+    public static final double TIME_BETWEEN_CLIPS_FALLING = 0.75;
+    public static final double TIME_BETWEEN_CLIPS_WALKING = 0.4;
     public static Vector2 DIEMNSIONS = new Vector2(100,100);
 
     private double Power = 100;
@@ -55,18 +59,28 @@ public class Avatar extends GameObject {
         super(topLeftCorner, dimensions, renderable);
     }
 
+    /**
+     *  initalize all animations in game to reduce runtime operations.
+     * @param imageReader global inage reader
+     */
     private static void instansiateAnimations(ImageReader imageReader) {
         if (JumpingAnimation != null) {
             return;
         }
-        // TODO numbers in constants
-        FlyingAnimation = createAnimationRenderer(imageReader,FLYING_IMAGES_PATHS,0.2);
-        JumpingAnimation = createAnimationRenderer(imageReader,JUMPING_IMAGES_PATHS,0.6);
-        FallingAnimation = createAnimationRenderer(imageReader,FALLING_IMAGES_PATHS,0.75);
-        WalkingRenderable = createAnimationRenderer(imageReader,WALKING_IMAGES_PATHS,0.4);
+        FlyingAnimation = createAnimationRenderer(imageReader,FLYING_IMAGES_PATHS, TIME_BETWEEN_CLIPS_FLYING);
+        JumpingAnimation = createAnimationRenderer(imageReader,JUMPING_IMAGES_PATHS, TIME_BETWEEN_CLIPS_JUMPING);
+        FallingAnimation = createAnimationRenderer(imageReader,FALLING_IMAGES_PATHS, TIME_BETWEEN_CLIPS_FALLING);
+        WalkingRenderable = createAnimationRenderer(imageReader,WALKING_IMAGES_PATHS, TIME_BETWEEN_CLIPS_WALKING);
         StandingRenderable = imageReader.readImage(STANDING_IMAGE_PATH,true);
     }
 
+    /**
+     * create single animation render
+     * @param imageReader - glabal image reader
+     * @param imagesPaths - arr of alll paths
+     * @param timeBetweenClips - time between clips
+     * @return an AnimationRenderable
+     */
     private static AnimationRenderable createAnimationRenderer(ImageReader imageReader, String[] imagesPaths, double timeBetweenClips) {
         Renderable[] clips = new Renderable[imagesPaths.length];
         for (int i = 0; i < imagesPaths.length; i++) {
@@ -75,6 +89,16 @@ public class Avatar extends GameObject {
         return new AnimationRenderable(clips,timeBetweenClips);
     }
 
+    /**
+     * This function creates an avatar that can travel the world and is followed by the camera. The can stand, walk,
+     * jump and fly, and never reaches the end of the world.
+     * @param gameObjects - The collection of all participating game objects.
+     * @param layer - The number of the layer to which the created avatar should be added.
+     * @param topLeftCorner - The location of the top-left corner of the created avatar.
+     * @param inputListener - Used for reading input from the user.
+     * @param imageReader - Used for reading images from disk or from within a jar.
+     * @return A newly created representing the avatar.
+     */
     public static Avatar create(GameObjectCollection gameObjects,
                          int layer,
                          Vector2 topLeftCorner,
@@ -90,12 +114,21 @@ public class Avatar extends GameObject {
         return avatar;
     }
 
+    /**
+     * zeroing the velocity in ant case of collision.
+     * @param other - the other gameObject that collided
+     * @param collision - a collision object
+     */
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
             setVelocity(Vector2.ZERO);
     }
 
+    /**
+     * override, set avatar animations and velocitices according to user input and power.
+     * @param deltaTime - time between frames
+     */
     @Override
     public void update(float deltaTime) {
         //add sound
@@ -149,6 +182,10 @@ public class Avatar extends GameObject {
         }
     }
 
+    /**
+     *  getter for Power (used in Decoradors)
+     * @return Power
+     */
     public double getPower() {
         return Power;
     }

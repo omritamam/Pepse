@@ -38,10 +38,20 @@ public class Terrain {
         this.noiseGenerator = new NoiseGenerator(this.seed);
     }
 
+    /**
+     * This method return the ground height at a given location.
+     * @param x - A number.
+     * @return - The ground height at the given location.
+     */
     public float groundHeightAt(float x) {
         return (float) (noiseGenerator.noise(x)*Block.SIZE*CROOKEDNESS_FACTOR+groundHeightAtX0);
     }
 
+    /**
+     * This method creates terrain in a given range of x-values.
+     * @param minX - The lower bound of the given range (will be rounded to a multiple of Block.SIZE).
+     * @param maxX - The upper bound of the given range (will be rounded to a multiple of Block.SIZE).
+     */
     public void createInRange(int minX, int maxX) {
         minX = (int) (Math.floor(minX / Block.SIZE) * Block.SIZE);
         for(int curX  = minX; curX < maxX; curX +=Block.SIZE){
@@ -49,6 +59,10 @@ public class Terrain {
         }
     }
 
+    /**
+     * Create a column of blocks, first COLLIDING_GROUND_DEPTH will be at groundLayer.
+     * @param x a number
+     */
     private void createColumn(float x) {
         float minY = (float) (Math.floor(groundHeightAt(x) / Block.SIZE) * Block.SIZE);
         float maxY = windowDimensions.y() * GROUND_DEPTH_FACTOR;
