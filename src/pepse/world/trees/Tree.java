@@ -24,7 +24,13 @@ public class Tree {
     private TreeMap<Integer, SingleTree> trees = new TreeMap<>();
     private Function<Float, Float> groundHeightAt;
 
-
+    /**
+     * constructor
+     * @param gameObjects collection of all game objects
+     * @param layer layer of trees
+     * @param groundHeightAt terrain function
+     * @param seed random factor seed
+     */
     public Tree(GameObjectCollection gameObjects, int layer, Function<Float, Float> groundHeightAt, int seed) {
         this.gameObjects = gameObjects;
         this.layer = layer;
@@ -32,6 +38,11 @@ public class Tree {
         this.seed = seed;
     }
 
+    /**
+     * creates new trees in given range
+     * @param minX minimum boundary of range
+     * @param maxX maximum boundary of range
+     */
     public void createInRange(int minX, int maxX){
         minX = (int) (Math.floor(minX / Block.SIZE) * Block.SIZE);
         for(int curX  = minX; curX<maxX; curX +=Block.SIZE){
@@ -42,6 +53,11 @@ public class Tree {
         }
     }
 
+    /**
+     * deletes trees in given range
+     * @param minX minimum boundary of range
+     * @param maxX maximum boundary of range
+     */
     public void deleteOutOfRange(int minX, int maxX){
         Integer minOver = this.trees.higherKey(maxX);
         if (minOver != null){

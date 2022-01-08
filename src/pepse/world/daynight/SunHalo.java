@@ -13,12 +13,12 @@ public class SunHalo {
     private static final String TAG = "halo";
 
     /**
-     *
-     * @param gameObjects
-     * @param layer
-     * @param sun
-     * @param color
-     * @return
+     * creates a sun halo
+     * @param gameObjects collection of game objects
+     * @param layer of sun halo
+     * @param sun the sun GameObject
+     * @param color of sun halo
+     * @return sun halo
      */
     public static GameObject create(GameObjectCollection gameObjects, int layer, GameObject sun, Color color){
         GameObject halo = new GameObject(Vector2.ZERO, SIZE, new OvalRenderable(color));

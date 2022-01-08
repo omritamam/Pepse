@@ -27,6 +27,13 @@ public class SingleTree {
     private HashSet<Block> trunk = new HashSet<>();
     private TreeTop treeTop;
 
+    /**
+     * constructor
+     * @param baseLoc location of tree base
+     * @param gameObjects collection of game objects
+     * @param layer layer of the tree
+     * @param seed random factor seed
+     */
     public SingleTree(Vector2 baseLoc, GameObjectCollection gameObjects, int layer, int seed){
         this.baseLoc = baseLoc;
         this.height = 0;
@@ -37,6 +44,9 @@ public class SingleTree {
         plant();
     }
 
+    /**
+     * creates a single tree in the game
+     */
     private void plant(){
         float x = this.baseLoc.x();
         float y = this.baseLoc.y();
@@ -52,6 +62,11 @@ public class SingleTree {
         addTreeTop(new Vector2(x - 0.5f * Block.SIZE, y - height * Block.SIZE));
     }
 
+    /**
+     * adds a block to the trunk of the tree
+     * @param x location to add
+     * @param y location to add
+     */
     private void addTrunkBlock(float x, float y){
         Block block = new Block(new Vector2(x, y),
                 new RectangleRenderable(ColorSupplier.approximateColor(TRUNK_COLOR)));
@@ -61,11 +76,18 @@ public class SingleTree {
         this.height++;
     }
 
+    /**
+     * adds a tree top on top of the trunk
+     * @param loc location the tree top base
+     */
     private void addTreeTop(Vector2 loc) {
         this.treeTop = new TreeTop(this.gameObjects, loc, this.layer + 1, LEAF_SLOTS,
                 this.factory.getDensity(loc.x()), this.factory.getColor(loc.x()), this.seed);
     }
 
+    /**
+     * deletes all objects in a single tree
+     */
     public void removeTree(){
         this.treeTop.removeLeaves();
         for (Block block : this.trunk) {

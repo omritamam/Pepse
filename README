@@ -1,0 +1,31 @@
+omryshaby 314883711
+omri.tamam 315564112
+
+
+TODO uml differences
+
+
+TODO endless world implementation
+
+
+the trees implementation was challenging and we changed it a few times. eventually we settled on the following
+implementation:
+-Tree class acts as a tree manager which adds and deletes trees in range
+-SingleTree class represents a single tree composed of a trunk and a tree top made of leaves
+-LeafTraitsFactory class defines the shape/leaves density and color of a tree top
+-TreeTop class manages the leaves of a specific tree
+-Leaf class represents a single leaf
+
+
+TODO dilemmas
+
+
+we implemented several bonuses in our project:
+1. the tree height is random so that the base height is 10 blocks, and there's a 0.1 chance to add another
+block. more blocks will be added until the random factor fails.
+2. we added an energy bar under avatar. the bar follows the avatar and changes it's color according to the
+amount of energy left - 0-20 is red, 21-90 is blue, 91-100 is green.
+3. different trees have different base colors according to a random factor (depends on seed). there are 3
+options for colors.
+4. different trees have different shapes/leaves density according to a random factor (depends on seed). there
+are 4 options - square shape, plus shape, triangle shape and a tall rectangle shape.

@@ -14,15 +14,31 @@ public class LeafTraitsFactory {
             new Color(131, 38, 22),
             new Color(155, 108, 69)};
 
+    /**
+     * constructor
+     * @param leafSlots number of leaves in a row
+     * @param seed random factor seed
+     */
     public LeafTraitsFactory(int leafSlots, int seed){
         this.leafSlots = leafSlots;
         this.seed = seed;
     }
 
+    /**
+     * gets a base color for a treetop
+     * @param x x location of treetop
+     * @return base color
+     */
     public Color getColor(float x){
         return BASE_COLORS[pick(x, true)];
     }
 
+    /**
+     * gets density function for a treetop
+     * sets the shape of the treetop
+     * @param x x location of treetop
+     * @return leaves density function
+     */
     public BiPredicate<Integer, Integer> getDensity(float x){
         switch (pick(x, false)){
             case 0: // plus shape
@@ -44,6 +60,12 @@ public class LeafTraitsFactory {
         }
     }
 
+    /**
+     * picks a random number to determine which color or density function to return
+     * @param x x location of treetop
+     * @param color true if needs a color, false for density function
+     * @return integer representing the decision
+     */
     private int pick(float x, boolean color){
         int range;
         if (color){
