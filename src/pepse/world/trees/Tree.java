@@ -44,7 +44,6 @@ public class Tree {
 
     public void deleteOutOfRange(int minX, int maxX){
         Integer minOver = this.trees.higherKey(maxX);
-        Integer maxUnder = this.trees.lowerKey(minX);
         if (minOver != null){
             var tail = this.trees.tailMap(minOver).keySet();
             for (int treeX : tail) {
@@ -54,6 +53,7 @@ public class Tree {
             }
             tail.clear();
         }
+        Integer maxUnder = this.trees.lowerKey(minX);
         if (maxUnder != null){
             var head = this.trees.headMap(maxUnder).keySet();
             for (int treeX : head) {

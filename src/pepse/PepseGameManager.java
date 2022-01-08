@@ -164,7 +164,7 @@ public class PepseGameManager extends GameManager {
             }
             counter++;
         }
-        //tofo: remove counter
+        //todo: remove counter
         System.out.println("\n "+counter);
         this.treeManager.deleteOutOfRange(curMinX, curMaxX);
     }
