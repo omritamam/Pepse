@@ -18,9 +18,6 @@ import java.util.function.Function;
 public class Tree {
 
     private static final double TREE_CHANCE = 0.1;
-
-
-
     private final GameObjectCollection gameObjects;
     private final int layer;
     private final int seed;

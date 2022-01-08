@@ -96,7 +96,7 @@ public class NoiseGenerator {
     }
 
     public double noise(double x) {
-        x/=2;
+        x/=12;
         double value = 0.0;
         double size = default_size;
         double initialSize = size;

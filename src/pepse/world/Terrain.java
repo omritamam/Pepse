@@ -15,7 +15,7 @@ import java.awt.*;
 public class Terrain {
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
     private static final int TERRAIN_DEPTH = 20;
-    private static final float CROOKEDNESS_FACTOR = 3.0F;
+    private static final float CROOKEDNESS_FACTOR = 4.0F;
     private static final String TAG = "ground";
     public static final float GROUND_DEPTH_FACTOR = 1.5f;
     public static final int COLLIDING_GROUND_DEPTH = 3;
@@ -34,7 +34,7 @@ public class Terrain {
         this.groundLayer = groundLayer;
         this.windowDimensions = windowDimensions;
         this.seed = seed;
-        this.groundHeightAtX0 =  2 * windowDimensions.y()/3;
+        this.groundHeightAtX0 =  windowDimensions.y();
         this.noiseGenerator = new NoiseGenerator(this.seed);
     }
 

@@ -55,7 +55,7 @@ public class Avatar extends GameObject {
      * @param dimensions    Width and height in window coordinates.
      * @param renderable    The renderable representing the object. Can be null, in which case
      */
-    public Avatar(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable) {
+    protected Avatar(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable) {
         super(topLeftCorner, dimensions, renderable);
     }
 

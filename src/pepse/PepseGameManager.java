@@ -34,7 +34,7 @@ public class PepseGameManager extends GameManager {
     private static final int AVATAR_LAYER = Layer.DEFAULT;
     private static final int DAYNIGHT_CYCLE = 30;
     private static final Color HALO_COLOR = new Color(255, 255, 0, 20);
-    private static final float WINDOW_OFFSET_FACTOR = 0.2F;
+    private static final float ENDLESS_WINDOW_OFFSET_FACTOR = 0.2F;
 
     /**
      * TODO
@@ -58,26 +58,35 @@ public class PepseGameManager extends GameManager {
     private Tree treeManager;
     private Avatar avatar;
 
-
     public static void main(String[] args) {
         new PepseGameManager().run();
     }
 
-    @Override
+    /**
+     * The method will be called once when a GameGUIComponent is created,
+     * and again after every invocation of windowController.resetGame().
+     * @param imageReader Contains a single method: readImage, which reads an image from disk.
+     *                 See its documentation for help.
+     * @param soundReader Contains a single method: readSound, which reads a wav file from
+     *                    disk. See its documentation for help.
+     * @param inputListener Contains a single method: isKeyPressed, which returns whether
+     *                      a given key is currently pressed by the user or not. See its
+     *                      documentation.
+     * @param windowController Contains an array of helpful, self explanatory methods
+     *                         concerning the window.
+*/
+     @Override
     public void initializeGame(ImageReader imageReader, SoundReader soundReader,
                                UserInputListener inputListener, WindowController windowController) {
+        super.initializeGame(imageReader,soundReader,inputListener,windowController);
         this.windowController = windowController;
-        super.initializeGame(imageReader,
-                soundReader,
-                inputListener,
-                windowController);
         defineLayers();
         Vector2 windowDimensions = windowController.getWindowDimensions();
         windowController.setTargetFramerate(FRAME_RATE);
         this.seed = new Random().nextGaussian() * 255;
         this.windowWidth =  (int)  windowDimensions.x();
-        this.curMinX = (int) -(WINDOW_OFFSET_FACTOR * windowWidth);
-        this.curMaxX =  (int) (1+ WINDOW_OFFSET_FACTOR * windowWidth);
+        this.curMinX = (int) -(ENDLESS_WINDOW_OFFSET_FACTOR * windowWidth);
+        this.curMaxX =  (int) (1+ ENDLESS_WINDOW_OFFSET_FACTOR * windowWidth);
         // create sky
         Sky.create(gameObjects(), windowDimensions, SKY_LAYER);
         // create terrain
@@ -93,10 +102,12 @@ public class PepseGameManager extends GameManager {
         treeManager.createInRange(curMinX, curMaxX);
         // create avatar
         float avatarInitalLocationX = windowDimensions.x()*0.5f;
-        Vector2 avaterLocation = new Vector2(avatarInitalLocationX, terrain.groundHeightAt(avatarInitalLocationX) - 2 * Avatar.DIEMNSIONS.y());
+        Vector2 avaterLocation = new Vector2(avatarInitalLocationX, terrain.groundHeightAt(avatarInitalLocationX) -
+                3 * Avatar.DIEMNSIONS.y());
         Avatar avatar = Avatar.create(gameObjects(), AVATAR_LAYER, avaterLocation, inputListener, imageReader);
         this.avatar = avatar;
-        setCamera(new Camera(avatar, windowController.getWindowDimensions().mult(0.5f).subtract(avaterLocation), windowController.getWindowDimensions(),
+        setCamera(new Camera(avatar, windowController.getWindowDimensions().mult(0.5f).subtract(avaterLocation),
+                windowController.getWindowDimensions(),
                 windowController.getWindowDimensions()));
         // layers collision
         gameObjects().layers().shouldLayersCollide(AVATAR_LAYER, TREE_LAYER, true);
@@ -104,6 +115,10 @@ public class PepseGameManager extends GameManager {
         gameObjects().layers().shouldLayersCollide(LEAVES_LAYER, SURFACE_LAYER, false);
     }
 
+    /**
+     * override, run methods to support endless world.
+     * @param deltaTime - time between frames
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
@@ -111,10 +126,13 @@ public class PepseGameManager extends GameManager {
         deleteOutOfRange();
     }
 
+    /**
+     * the method creates new gameObjects in the sides of the screen, following the camera movements.
+     */
     private void createInRange(){
         int cameraLocationX = (int) camera().getCenter().x();
-        int newMinX = (int) (cameraLocationX - (0.5F + WINDOW_OFFSET_FACTOR) * windowWidth);
-        int newMaxX = (int) (cameraLocationX + (0.5F + WINDOW_OFFSET_FACTOR) * windowWidth);
+        int newMinX = (int) (cameraLocationX - (0.5F + ENDLESS_WINDOW_OFFSET_FACTOR) * windowWidth);
+        int newMaxX = (int) (cameraLocationX + (0.5F + ENDLESS_WINDOW_OFFSET_FACTOR) * windowWidth);
         if(newMinX < curMinX){
             terrain.createInRange(newMinX, curMinX);
             treeManager.createInRange(newMinX, curMinX);
@@ -127,6 +145,9 @@ public class PepseGameManager extends GameManager {
         curMaxX = newMaxX;
     }
 
+    /**
+     * removes all gameObjects outside the screen range.
+     */
     private void deleteOutOfRange(){
         int counter = 0;
         var gameObjects = gameObjects();
@@ -144,10 +165,13 @@ public class PepseGameManager extends GameManager {
             counter++;
         }
         //tofo: remove counter
-        System.out.println(counter);
+        System.out.println("\n "+counter);
         this.treeManager.deleteOutOfRange(curMinX, curMaxX);
     }
 
+    /**
+     * todo: are you sure it neccesary?
+     */
     private void defineLayers(){
         this.layers.put(Layers.SKY, SKY_LAYER);
         this.layers.put(Layers.SUN, SUN_LAYER);
