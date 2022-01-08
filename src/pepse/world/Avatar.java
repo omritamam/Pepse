@@ -103,7 +103,6 @@ public class Avatar extends GameObject {
         if(transform().getVelocity().x() == 0 && transform().getVelocity().y() == 0){
             renderer().setRenderable(StandingRenderable);
         }
-        //left-right
         if(inputListener.isKeyPressed(KeyEvent.VK_LEFT)){
             transform().setVelocityX(-MOVEMENT_SPEED);
             renderer().setIsFlippedHorizontally(true);
@@ -131,6 +130,9 @@ public class Avatar extends GameObject {
                 else if(transform().getVelocity().y() == 0){
                     transform().setVelocityY(-JUMP_SPEED);
                     renderer().setRenderable(JumpingAnimation);
+                }
+                else{
+                    transform().setAccelerationY(GRAVITY);
                 }
         }
         else {

@@ -34,6 +34,7 @@ public class PepseGameManager extends GameManager {
     private static final int AVATAR_LAYER = Layer.DEFAULT;
     private static final int DAYNIGHT_CYCLE = 30;
     private static final Color HALO_COLOR = new Color(255, 255, 0, 20);
+    private static final float WINDOW_OFFSET_FACTOR = 0.2F;
 
     /**
      * TODO
@@ -55,6 +56,7 @@ public class PepseGameManager extends GameManager {
     private int windowWidth;
     private Terrain terrain;
     private Tree treeManager;
+    private Avatar avatar;
 
 
     public static void main(String[] args) {
@@ -74,8 +76,8 @@ public class PepseGameManager extends GameManager {
         windowController.setTargetFramerate(FRAME_RATE);
         this.seed = new Random().nextGaussian() * 255;
         this.windowWidth =  (int)  windowDimensions.x();
-        this.curMinX = (int) -(0.5f * windowWidth);
-        this.curMaxX =  (int) (1.5f * windowWidth);
+        this.curMinX = (int) -(WINDOW_OFFSET_FACTOR * windowWidth);
+        this.curMaxX =  (int) (1+ WINDOW_OFFSET_FACTOR * windowWidth);
         // create sky
         Sky.create(gameObjects(), windowDimensions, SKY_LAYER);
         // create terrain
@@ -90,9 +92,10 @@ public class PepseGameManager extends GameManager {
         treeManager = new Tree(gameObjects(), TREE_LAYER, terrain::groundHeightAt, (int) this.seed);
         treeManager.createInRange(curMinX, curMaxX);
         // create avatar
-        float avatarInitalLocationX = windowDimensions.y()*0.5f;
+        float avatarInitalLocationX = windowDimensions.x()*0.5f;
         Vector2 avaterLocation = new Vector2(avatarInitalLocationX, terrain.groundHeightAt(avatarInitalLocationX) - 2 * Avatar.DIEMNSIONS.y());
         Avatar avatar = Avatar.create(gameObjects(), AVATAR_LAYER, avaterLocation, inputListener, imageReader);
+        this.avatar = avatar;
         setCamera(new Camera(avatar, windowController.getWindowDimensions().mult(0.5f).subtract(avaterLocation), windowController.getWindowDimensions(),
                 windowController.getWindowDimensions()));
         // layers collision
@@ -110,35 +113,44 @@ public class PepseGameManager extends GameManager {
 
     private void createInRange(){
         int cameraLocationX = (int) camera().getCenter().x();
-        if(cameraLocationX - windowWidth < curMinX){
-            terrain.createInRange(cameraLocationX - windowWidth, curMinX);
-            treeManager.createInRange(cameraLocationX - windowWidth, curMinX);
-            curMinX = cameraLocationX - windowWidth;
-            curMaxX = cameraLocationX + windowWidth;
+        int newMinX = (int) (cameraLocationX - (0.5F + WINDOW_OFFSET_FACTOR) * windowWidth);
+        int newMaxX = (int) (cameraLocationX + (0.5F + WINDOW_OFFSET_FACTOR) * windowWidth);
+
+        if(newMinX < curMinX){
+            terrain.createInRange(newMinX, curMinX);
+            treeManager.createInRange(newMinX, curMinX);
         }
-        if(cameraLocationX + windowWidth > curMaxX){
-            terrain.createInRange(curMaxX, cameraLocationX + windowWidth );
-            treeManager.createInRange(curMaxX, cameraLocationX + windowWidth );
-            curMaxX = cameraLocationX + windowWidth;
-            curMinX = cameraLocationX - windowWidth;
+        if(newMaxX > curMaxX){
+            terrain.createInRange(curMaxX, newMaxX );
+            treeManager.createInRange(curMaxX, newMaxX );
         }
+        curMinX = newMinX;
+        curMaxX = newMaxX;
+
     }
 
     private void deleteOutOfRange(){
-        int counter=0;
-//        System.out.println("curmin: "+curMinX+", curmax: "+curMaxX);
-        var goThrough = gameObjects();
-        for(GameObject gameObject : goThrough) {
+        int counter = 0;
+        var gameObjects = gameObjects();
+        System.out.print((int) avatar.getTopLeftCorner().x()+" avatar,");
+        System.out.print((int) curMinX+" curMinX,");
+        System.out.print((int) curMaxX+" curMaxX,");
+
+
+        for(GameObject gameObject : gameObjects) {
             float locationX = gameObject.getTopLeftCorner().x();
-            if(locationX< curMinX || locationX > curMaxX){
-                gameObjects().removeGameObject(gameObject, SURFACE_LAYER);
-                gameObjects().removeGameObject(gameObject, DEEP_GROUND_LAYER);
-//                System.out.println("delete");
+
+            if(locationX < curMinX || locationX > curMaxX){
+                gameObjects.removeGameObject(gameObject, SURFACE_LAYER);
+                gameObjects.removeGameObject(gameObject, DEEP_GROUND_LAYER);
+                System.out.print((int)locationX);
+                System.out.print(gameObject.getTag() +",");
+
             }
             counter++;
         }
+        //tofo: remove counter
         System.out.println(counter);
-        // TODO remove print and counter
         this.treeManager.deleteOutOfRange(curMinX, curMaxX);
     }
 
