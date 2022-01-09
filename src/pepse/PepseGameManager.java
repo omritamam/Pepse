@@ -120,7 +120,7 @@ public class PepseGameManager extends GameManager {
         float groundHeight = terrain.groundHeightAt(avatarTopLeftCorner.x());
         if(avatarTopLeftCorner.y()>groundHeight+50){
             avatar.setTopLeftCorner(new Vector2(avatarTopLeftCorner.x(), groundHeight-Avatar.DIEMNSIONS.y()*3));
-            avatar.transform().setVelocity(Vector2.ZERO);
+            avatar.transform().setVelocityY(0);
             System.out.println("raised!");
         }
     }
@@ -160,7 +160,7 @@ public class PepseGameManager extends GameManager {
     }
 
     /**
-     * todo: are you sure it neccesary?
+     * initiates the layers EnumMap
      */
     private void defineLayers(){
         this.layers.put(Layers.SKY, SKY_LAYER);
