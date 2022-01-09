@@ -38,12 +38,14 @@ public class Leaf extends Block {
     private Transition<Vector2> widthTransition;
 
     /**
-     * Construct a new GameObject instance.
-     *
-     * @param topLeftCorner Position of the object, in window coordinates (pixels).
-     *                      Note that (0,0) is the top-left corner of the window.
-     * @param dimensions    Width and height in window coordinates.
-     * @param renderable    The renderable representing the object. Can be null, in which case
+     * constructor
+     * @param topLeftCorner of the leaf
+     * @param dimensions of the leaf
+     * @param renderable of the lead
+     * @param seed random factor seed
+     * @param layer of the seed
+     * @param gameObjects collection of game objects
+     * @param respawn respawn function for the leaf
      */
     public Leaf(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable, int seed, int layer,
                 GameObjectCollection gameObjects, Runnable respawn) {
@@ -69,6 +71,9 @@ public class Leaf extends Block {
                 this::fall);
     }
 
+    /**
+     * turns the leaf which means changing their dimensions and angle
+     */
     private void turn(){
         this.angleTransition = new Transition<>(this,
                 this.renderer()::setRenderableAngle, STILL_ANGLE, TURNED_ANGLE,
@@ -80,6 +85,9 @@ public class Leaf extends Block {
                 Transition.TransitionType.TRANSITION_BACK_AND_FORTH, null);
     }
 
+    /**
+     * makes the leaf fall
+     */
     private void fall(){
         this.transform().setVelocityY(LEAF_DROP_RATE);
         this.gameObjects.removeGameObject(this, this.layer);
@@ -96,6 +104,9 @@ public class Leaf extends Block {
         fade();
     }
 
+    /**
+     * makes the leaf fade
+     */
     private void fade(){
         this.renderer().fadeOut(FADEOUT_TIME, ()->{
             float respawnTime = new Random(Objects.hash(
@@ -105,6 +116,12 @@ public class Leaf extends Block {
         });
     }
 
+    /**
+     * overrides GameObject onCollisionEnter
+     * resets the velocity of the leaf, and the transitions
+     * @param other object collided with
+     * @param collision collision
+     */
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);

@@ -38,15 +38,12 @@ public class PepseGameManager extends GameManager {
 
     /**
      * TODO
-     * bug: flying jumping
      * bug: double leaves?
      * bug: remove out of bounds
      * avatar sound
      * avatar movement
-     * numbers in constants (in avatar)
      * choose power screen
      */
-
     public static EnumMap<Layers, Integer> layers = new EnumMap<Layers, Integer>(Layers.class);
     private static HashSet<Enum> enviromentLayers = new HashSet<>();
     private int curMinX;
@@ -151,7 +148,7 @@ public class PepseGameManager extends GameManager {
     private void deleteOutOfRange(){
         int counter = 0;
         var gameObjects = gameObjects();
-        System.out.print((int) avatar.getTopLeftCorner().x()+" avatar,");
+//        System.out.print((int) avatar.getTopLeftCorner().x()+" avatar,");
         System.out.print((int) curMinX+" curMinX,");
         System.out.print((int) curMaxX+" curMaxX,");
         for(GameObject gameObject : gameObjects) {
@@ -164,8 +161,8 @@ public class PepseGameManager extends GameManager {
             }
             counter++;
         }
-        //tofo: remove counter
-        System.out.println("\n "+counter);
+        //todo: remove counter
+        System.out.println("\n"+counter);
         this.treeManager.deleteOutOfRange(curMinX, curMaxX);
     }
 
