@@ -8,7 +8,7 @@ import danogl.util.Vector2;
 
 import java.awt.*;
 
-public class AvatarPowerWindowDecorator extends Avatar{
+public class AvatarPowerBarDecorator extends Avatar{
     private static final Vector2 SCORE_WINDOW_DIEMNSIONS = new Vector2(80,20);
     private static final String FONT_NAME = "Ariel";
     private static final int HIGH_THRESHOLD = 90;
@@ -28,7 +28,7 @@ public class AvatarPowerWindowDecorator extends Avatar{
      * @param dimensions    Width and height in window coordinates.
      * @param renderable    The renderable representing the object. Can be null, in which case
      */
-    public AvatarPowerWindowDecorator(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable) {
+    public AvatarPowerBarDecorator(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable) {
         super(topLeftCorner, dimensions, renderable);
         TextRenderable = new TextRenderable(String.valueOf(super.getPower()), FONT_NAME, false, true);
         scoreWindow = new GameObject(topLeftCorner.add(new Vector2(0,dimensions.y())),

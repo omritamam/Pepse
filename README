@@ -2,36 +2,41 @@ omryshaby 314883711
 omri.tamam 315564112
 
 
-in the first UML we didn't realize the complications we'd get into, especially in the trees package, so there
+In the first UML we didn't realize the complications we'd get into, especially in the trees package, so there
 are many differences between the two UMLs. we added a few classes in the tree package: SingleTree, TreeTop,
-Leaf and LeafTraitsFactory.
+Leaf and LeafTraitsFactory. We added an avatar decorator AvatarPowerBarDecorator.
 
 
-TODO endless world implementation
+The endless world implementation is written in PepseGameManager for rocks and in Tree class for leaves and trees.
+We saved 2 fields for the start and the end of the X coordinate of the current world and follows the camera location.
+By update() method runs we build new objects in each new frame, and remove objects from out of range objects.
+The trees had to remove with all their objects - leaves and blocks; so Tree.removeOutOfRange() method using TreeSet data structure 
+supported this feature.
 
 
-the trees implementation was challenging and we changed it a few times. eventually we settled on the following
+The trees implementation was challenging and we changed it a few times. eventually, we settled on the following
 implementation:
--Tree class acts as a tree manager which adds and deletes trees in range
--SingleTree class represents a single tree composed of a trunk and a tree top made of leaves
--LeafTraitsFactory class is a factory class which defines the shape/leaves density and color of a tree top
--TreeTop class manages the leaves of a specific tree
--Leaf class represents a single leaf
+	- Tree class acts as a tree manager which adds and deletes trees in range.
+	- SingleTree class represents a single tree composed of a trunk and a treetop made of leaves.
+	- LeafTraitsFactory class is a factory class that defines the shape/leaves density and color of a tree top.
+	- TreeTop class manages the leaves of a specific tree.
+	- Leaf class represents a single leaf.
 
 
-we had a few dilemmas regarding the implementation of the trees, and we ended up changing it a few times. at
-first, there were fewer classes: Tree, TreeTop and Leaf. when we added the changing leaves bonuses we added
-the factory class, and when we wanted to erase objects out of range, we changed the structure and added the
-SingleTree class, because we needed to manage erasure of a single tree.
-TODO more dilemmas
+We had a few dilemmas regarding the implementation of the trees, and we ended up changing it a few times.
+1. At first, there were fewer classes: Tree, TreeTop, and Leaf. when we added the changing leaves bonuses we added
+	the factory class, and when we wanted to erase objects out of range, we changed the structure and added the
+	SingleTree class, because we needed to manage the erasure of a whole single tree.
+2. We wanted to add a score bar for the avatar, we had to choose between Decorator design and regular concrete
+	class that consumes score information via Avatar class API, this implementation wouldn't implement OOP principles.
 
 
 we implemented several bonuses in our project:
-1. the tree height is random so that the base height is 10 blocks, and there's a 0.1 chance to add another
-block. more blocks will be added until the random factor fails.
-2. we added an energy bar under avatar. the bar follows the avatar and changes it's color according to the
-amount of energy left - 0-20 is red, 21-90 is blue, 91-100 is green.
+1. The tree height is random so that the base height is 10 blocks, and there's a 0.1 chance to add another
+	block. more blocks will be added until the random factor fails.
+2. we added an energy bar under the avatar. the bar follows the avatar and changes its color according to the
+	amount of energy left - 0-20 is red, 21-90 is blue, 91-100 is green.
 3. different trees have different base colors according to a random factor (depends on seed). there are 3
-options for colors.
+	options for colors.
 4. different trees have different shapes/leaves density according to a random factor (depends on seed). there
-are 4 options - square shape, plus shape, triangle shape and a tall rectangle shape.
+	are 4 options - square shape, plus shape, triangle shape, and a tall rectangle shape.

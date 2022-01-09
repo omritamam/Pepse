@@ -107,7 +107,7 @@ public class Avatar extends GameObject {
                          UserInputListener inputListener,
                          ImageReader imageReader){
         Avatar.inputListener = inputListener;
-        Avatar avatar = new AvatarPowerWindowDecorator(topLeftCorner,DIEMNSIONS,imageReader.readImage(
+        Avatar avatar = new AvatarPowerBarDecorator(topLeftCorner,DIEMNSIONS,imageReader.readImage(
                 STANDING_IMAGE_PATH,true));
         gameObjects.addGameObject(avatar,layer);
         avatar.transform().setAccelerationY(GRAVITY);
