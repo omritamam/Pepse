@@ -79,7 +79,6 @@ public class PepseGameManager extends GameManager {
         this.windowController = windowController;
         defineLayers();
         Vector2 windowDimensions = windowController.getWindowDimensions();
-        windowController.setTargetFramerate(FRAME_RATE);
         this.seed = new Random().nextGaussian() * 255;
         this.windowWidth =  (int)  windowDimensions.x();
         this.curMinX = (int) -(ENDLESS_WINDOW_OFFSET_FACTOR * windowWidth);
