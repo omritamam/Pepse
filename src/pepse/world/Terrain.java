@@ -18,7 +18,7 @@ public class Terrain {
     private static final float CROOKEDNESS_FACTOR = 4.0F;
     private static final String TAG = "ground";
     private static final float GROUND_DEPTH_FACTOR = 1.5f;
-    private static final int COLLIDING_GROUND_DEPTH = 3;
+    private static final int COLLIDING_GROUND_DEPTH = 1;
 
     private final GameObjectCollection gameObjects;
     private final int groundLayer;

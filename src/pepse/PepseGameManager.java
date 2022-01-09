@@ -36,7 +36,6 @@ public class PepseGameManager extends GameManager {
     private static final Color HALO_COLOR = new Color(255, 255, 0, 20);
     private static final float ENDLESS_WINDOW_OFFSET_FACTOR = 0.2F;
 
-
     public static EnumMap<Layers, Integer> layers = new EnumMap<Layers, Integer>(Layers.class);
     private static HashSet<Enum> enviromentLayers = new HashSet<>();
     private int curMinX;
@@ -113,6 +112,17 @@ public class PepseGameManager extends GameManager {
         super.update(deltaTime);
         createInRange();
         deleteOutOfRange();
+        raiseFallingAvatar();
+    }
+
+    private void raiseFallingAvatar() {
+        Vector2 avatarTopLeftCorner = avatar.getTopLeftCorner();
+        float groundHeight = terrain.groundHeightAt(avatarTopLeftCorner.x());
+        if(avatarTopLeftCorner.y()>groundHeight+50){
+            avatar.setTopLeftCorner(new Vector2(avatarTopLeftCorner.x(), groundHeight-Avatar.DIEMNSIONS.y()*3));
+            avatar.transform().setVelocity(Vector2.ZERO);
+            System.out.println("raised!");
+        }
     }
 
     /**
