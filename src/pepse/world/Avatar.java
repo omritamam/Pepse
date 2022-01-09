@@ -17,9 +17,10 @@ public class Avatar extends GameObject {
     private static final String SITTING_IMAGE_PATH = "pepse/assets/player/sitting.png";
 
     private static final String[] JUMPING_IMAGES_PATHS = new String[]{
-            "pepse/assets/player/jumping 1.png" , "pepse/assets/player/jumping 2.png", "pepse/assets/player/jumping 3.png"};
+            "pepse/assets/player/jumping 1.png" , "pepse/assets/player/jumping 2.png",
+            "pepse/assets/player/jumping 3.png"};
     private static final String[] FLYING_IMAGES_PATHS = new String[]{
-            "pepse/assets/player/flying 1.png" , "pepse/assets/player/flying 2.png", "pepse/assets/player/flying 3.png" };
+            "pepse/assets/player/flying 1.png" ,"pepse/assets/player/flying 2.png", "pepse/assets/player/flying 3.png"};
     private static final String[] WALKING_IMAGES_PATHS = new String[]{
             "pepse/assets/player/walking 1.png" , "pepse/assets/player/walking 2.png" };
     private static final String[] FALLING_IMAGES_PATHS = new String[]{
@@ -81,7 +82,8 @@ public class Avatar extends GameObject {
      * @param timeBetweenClips - time between clips
      * @return an AnimationRenderable
      */
-    private static AnimationRenderable createAnimationRenderer(ImageReader imageReader, String[] imagesPaths, double timeBetweenClips) {
+    private static AnimationRenderable createAnimationRenderer(ImageReader imageReader, String[] imagesPaths,
+                                                               double timeBetweenClips) {
         Renderable[] clips = new Renderable[imagesPaths.length];
         for (int i = 0; i < imagesPaths.length; i++) {
             clips[i] = imageReader.readImage(imagesPaths[i], true);
@@ -105,7 +107,8 @@ public class Avatar extends GameObject {
                          UserInputListener inputListener,
                          ImageReader imageReader){
         Avatar.inputListener = inputListener;
-        Avatar avatar = new AvatarPowerWindowDecorator(topLeftCorner,DIEMNSIONS,imageReader.readImage(STANDING_IMAGE_PATH,true));
+        Avatar avatar = new AvatarPowerWindowDecorator(topLeftCorner,DIEMNSIONS,imageReader.readImage(
+                STANDING_IMAGE_PATH,true));
         gameObjects.addGameObject(avatar,layer);
         avatar.transform().setAccelerationY(GRAVITY);
         avatar.physics().preventIntersectionsFromDirection(Vector2.ZERO);
