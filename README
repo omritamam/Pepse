@@ -2,7 +2,9 @@ omryshaby 314883711
 omri.tamam 315564112
 
 
-TODO uml differences
+in the first UML we didn't realize the complications we'd get into, especially in the trees package, so there
+are many differences between the two UMLs. we added a few classes in the tree package: SingleTree, TreeTop,
+Leaf and LeafTraitsFactory.
 
 
 TODO endless world implementation
@@ -12,12 +14,16 @@ the trees implementation was challenging and we changed it a few times. eventual
 implementation:
 -Tree class acts as a tree manager which adds and deletes trees in range
 -SingleTree class represents a single tree composed of a trunk and a tree top made of leaves
--LeafTraitsFactory class defines the shape/leaves density and color of a tree top
+-LeafTraitsFactory class is a factory class which defines the shape/leaves density and color of a tree top
 -TreeTop class manages the leaves of a specific tree
 -Leaf class represents a single leaf
 
 
-TODO dilemmas
+we had a few dilemmas regarding the implementation of the trees, and we ended up changing it a few times. at
+first, there were fewer classes: Tree, TreeTop and Leaf. when we added the changing leaves bonuses we added
+the factory class, and when we wanted to erase objects out of range, we changed the structure and added the
+SingleTree class, because we needed to manage erasure of a single tree.
+TODO more dilemmas
 
 
 we implemented several bonuses in our project:
