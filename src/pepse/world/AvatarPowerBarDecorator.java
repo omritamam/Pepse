@@ -10,10 +10,10 @@ import java.awt.*;
 
 public class AvatarPowerBarDecorator extends Avatar{
     private static final Vector2 SCORE_WINDOW_DIEMNSIONS = new Vector2(80,20);
-    private static final String FONT_NAME = "Ariel";
+    private static final String FONT_NAME = "Arial";
     private static final int HIGH_THRESHOLD = 90;
     private static final int MEDIUM_THRESHOLD = 20;
-    private static final Color MEDIUM_COLOR = Color.BLACK;
+    private static final Color MEDIUM_COLOR = Color.BLUE;
     private static final Color LOW_COLOR = Color.RED;
     private static final Color HIGH_COLOR = Color.GREEN;
     private final TextRenderable TextRenderable;
