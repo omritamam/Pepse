@@ -131,7 +131,6 @@ public class Avatar extends GameObject {
      */
     @Override
     public void update(float deltaTime) {
-        //add sound
         super.update(deltaTime);
         if(transform().getVelocity().x() == 0 && transform().getVelocity().y() == 0){
             renderer().setRenderable(StandingRenderable);

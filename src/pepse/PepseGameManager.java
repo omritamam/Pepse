@@ -36,14 +36,7 @@ public class PepseGameManager extends GameManager {
     private static final Color HALO_COLOR = new Color(255, 255, 0, 20);
     private static final float ENDLESS_WINDOW_OFFSET_FACTOR = 0.2F;
 
-    /**
-     * TODO
-     * bug: double leaves?
-     * bug: remove out of bounds
-     * avatar sound
-     * avatar movement
-     * choose power screen
-     */
+
     public static EnumMap<Layers, Integer> layers = new EnumMap<Layers, Integer>(Layers.class);
     private static HashSet<Enum> enviromentLayers = new HashSet<>();
     private int curMinX;
@@ -145,23 +138,14 @@ public class PepseGameManager extends GameManager {
      * removes all gameObjects outside the screen range.
      */
     private void deleteOutOfRange(){
-        int counter = 0;
         var gameObjects = gameObjects();
-//        System.out.print((int) avatar.getTopLeftCorner().x()+" avatar,");
-        System.out.print((int) curMinX+" curMinX,");
-        System.out.print((int) curMaxX+" curMaxX,");
         for(GameObject gameObject : gameObjects) {
             float locationX = gameObject.getTopLeftCorner().x();
             if(locationX < curMinX || locationX > curMaxX){
                 gameObjects.removeGameObject(gameObject, SURFACE_LAYER);
                 gameObjects.removeGameObject(gameObject, DEEP_GROUND_LAYER);
-                System.out.print((int)locationX);
-                System.out.print(gameObject.getTag() +",");
             }
-            counter++;
         }
-        //todo: remove counter
-        System.out.println("\n"+counter);
         this.treeManager.deleteOutOfRange(curMinX, curMaxX);
     }
 
