@@ -8,10 +8,7 @@ import pepse.util.ColorSupplier;
 import pepse.world.Block;
 
 import java.awt.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Random;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 
@@ -40,6 +37,7 @@ public class Tree {
                 this.trees.put(curX, singleTree);
             }
         }
+        var x = new ArrayList<Integer>();
     }
 
     public void deleteOutOfRange(int minX, int maxX){

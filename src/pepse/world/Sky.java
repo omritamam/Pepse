@@ -28,4 +28,5 @@ public class Sky {
         sky.setTag(TAG);
         return sky;
     }
+    private Sky(){}
 }

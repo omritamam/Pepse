@@ -30,13 +30,13 @@ public class Avatar extends GameObject {
     private static final float JUMP_SPEED = 400;
     private static final float FLYING_SPEED = 400;
     private static final String TAG = "Avatar";
-    public static final int MAX_POWER = 100;
-    public static final double POWER_UP_RESTING = 0.5;
-    public static final int POWER_DOWN_FLYING = 1;
-    public static final double TIME_BETWEEN_CLIPS_FLYING = 0.2;
-    public static final double TIME_BETWEEN_CLIPS_JUMPING = 0.6;
-    public static final double TIME_BETWEEN_CLIPS_FALLING = 0.75;
-    public static final double TIME_BETWEEN_CLIPS_WALKING = 0.4;
+    private static final int MAX_POWER = 100;
+    private static final double POWER_UP_RESTING = 0.5;
+    private static final int POWER_DOWN_FLYING = 1;
+    private static final double TIME_BETWEEN_CLIPS_FLYING = 0.2;
+    private static final double TIME_BETWEEN_CLIPS_JUMPING = 0.6;
+    private static final double TIME_BETWEEN_CLIPS_FALLING = 0.75;
+    private static final double TIME_BETWEEN_CLIPS_WALKING = 0.4;
     public static Vector2 DIEMNSIONS = new Vector2(100,100);
 
     private double Power = 100;

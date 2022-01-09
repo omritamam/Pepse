@@ -17,14 +17,14 @@ public class Terrain {
     private static final int TERRAIN_DEPTH = 20;
     private static final float CROOKEDNESS_FACTOR = 4.0F;
     private static final String TAG = "ground";
-    public static final float GROUND_DEPTH_FACTOR = 1.5f;
-    public static final int COLLIDING_GROUND_DEPTH = 3;
+    private static final float GROUND_DEPTH_FACTOR = 1.5f;
+    private static final int COLLIDING_GROUND_DEPTH = 3;
 
     private final GameObjectCollection gameObjects;
     private final int groundLayer;
     private final Vector2 windowDimensions;
     private final int seed;
-    public final float groundHeightAtX0;
+    private final float groundHeightAtX0;
     private final NoiseGenerator noiseGenerator;
 
     public Terrain(GameObjectCollection gameObjects,
